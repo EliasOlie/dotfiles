@@ -11,6 +11,7 @@ Rectangle {
     readonly property int tile: 64
     readonly property int gapT: 8
     readonly property int pad: 22
+    readonly property int maxRows: 4     // linhas visíveis antes de rolar
     property var items: []
     property var hoveredItem: null
 
@@ -69,7 +70,23 @@ Rectangle {
         }
         Item { width: 1; height: 16 }
 
+        // Grade com rolagem: mostra até `maxRows` linhas; passou disso, rola
+        // com a roda do mouse e aparece uma barrinha lima de posição
+        Item {
+            width: parent.width
+            height: Math.min(grid.implicitHeight, panel.maxRows * panel.tile + (panel.maxRows - 1) * panel.gapT)
+
+        Flickable {
+            id: flick
+            anchors.fill: parent
+            contentHeight: grid.implicitHeight
+            clip: true
+            interactive: contentHeight > height
+            boundsBehavior: Flickable.StopAtBounds
+            flickableDirection: Flickable.VerticalFlick
+
         Grid {
+            id: grid
             columns: 3
             spacing: panel.gapT
             Repeater {
@@ -125,6 +142,20 @@ Rectangle {
                 }
             }
         }
+
+        }   // Flickable
+
+            // Barra de rolagem fina (só quando há mais que maxRows linhas)
+            Rectangle {
+                visible: flick.interactive
+                anchors.right: parent.right
+                anchors.rightMargin: -12
+                width: 2
+                y: flick.visibleArea.yPosition * parent.height
+                height: flick.visibleArea.heightRatio * parent.height
+                color: Theme.signal
+            }
+        }   // Item
 
         Item { width: 1; height: 16 }
 
