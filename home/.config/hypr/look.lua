@@ -77,6 +77,7 @@ end
 hl.on("hyprland.start", function()
     hl.exec_cmd("hyprpaper")
     hl.exec_cmd("waybar")
+    hl.exec_cmd("qs")                 -- painéis do rodapé (Quickshell)
     hl.exec_cmd("hypridle")
     hl.exec_cmd("nm-applet --indicator")
 end)

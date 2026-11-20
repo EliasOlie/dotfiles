@@ -49,6 +49,7 @@ hyprctl reload
 | `home/.zshrc` | zsh (oh-my-zsh, aliases com eza/bat, zoxide, fzf, ssh-agent) |
 | `home/.oh-my-zsh/custom/themes/eliasolie.zsh-theme` | prompt do zsh |
 | `home/.config/rofi-rbw.rc` | Bitwarden no rofi |
+| `home/.config/quickshell/` | painéis do rodapé: apps, mídia, agenda e sistema (Quickshell) |
 | `system/sddm/eliasolie/` | tema da tela de login (SDDM, Qt6) |
 | `rice/gen-wallpaper.py` | gera o wallpaper em qualquer resolução: `python3 rice/gen-wallpaper.py saida.png 2560 1440` |
 
@@ -82,6 +83,17 @@ hyprctl reload
 | `Super+Print` (+`Shift` área, +`Ctrl` 5 s), `Alt+Print`, `Super+Shift+S` | screenshots (salvos em `~/Imagens/Screenshots`) |
 
 Workspaces por monitor: o monitor 1 (`eDP-1`) usa os IDs 1–10 e o monitor 2 (`HDMI-A-1`) usa 11–20; a barra mostra sempre 1–10. A ordem fica em `MONITORS` no `keybinds.lua`.
+
+## Painéis do rodapé (Quickshell)
+
+- **Apps:** fixados (`pinned` em `BottomPanel.qml`) + os abertos. Clique foca (clicando de novo alterna entre as janelas do app); botão do meio abre outra janela.
+- **Mídia:** o player que estiver tocando (MPRIS: navegador, Spotify, mpv…).
+- **Sistema:** CPU, RAM, temperatura, GPU NVIDIA e disco. Clique abre o `htop`.
+- **Agenda:** lê `~/.local/share/eliasolie/agenda.json` e atualiza sozinho quando o arquivo muda. Formato:
+
+  ```json
+  [{ "title": "Reunião", "start": "2026-11-21T14:00:00-03:00", "end": "2026-11-21T15:00:00-03:00", "where": "Meet" }]
+  ```
 
 ## Notas
 
