@@ -130,6 +130,46 @@ for n = 1, 10 do
     end, "mover janela (sem seguir) para workspace " .. n)
 end
 
+-- ------------------------------------------------------------
+-- Super+D: mostrar o desktop (alterna)
+--   1ª vez: o monitor atual vai para um workspace vazio do seu bloco
+--           (procura do 0 para o 1), mostrando wallpaper e widgets
+--   2ª vez: volta para o workspace onde você estava
+-- ------------------------------------------------------------
+local DESK_PREV = {}   -- nome do monitor -> workspace de onde saiu
+
+local function ws_is_empty(id)
+    local ok, wins = pcall(hl.get_workspace_windows, id)
+    return (not ok) or wins == nil or #wins == 0
+end
+
+function ShowDesktop()
+    local m = hl.get_active_monitor()
+    if not m or not m.active_workspace then return end
+    local cur = m.active_workspace.id
+
+    -- Já está no desktop vindo do Super+D: volta
+    if DESK_PREV[m.name] and ws_is_empty(cur) then
+        local prev = DESK_PREV[m.name]
+        DESK_PREV[m.name] = nil
+        hl.dispatch(hl.dsp.focus({ workspace = prev, on_current_monitor = true }))
+        return
+    end
+    if ws_is_empty(cur) then return end  -- já está vazio, nada a fazer
+
+    local base = monitor_index(m.name) * 10
+    for n = 10, 1, -1 do
+        local id = base + n
+        if id ~= cur and ws_is_empty(id) then
+            DESK_PREV[m.name] = cur
+            hl.dispatch(hl.dsp.focus({ workspace = id, on_current_monitor = true }))
+            return
+        end
+    end
+    hl.notification.create({ text = "Nenhum workspace vazio neste monitor", timeout = 2000 })
+end
+bind(mainMod .. " + D", ShowDesktop, "mostrar o desktop (alterna)")
+
 bind(mainMod .. " + SHIFT + bracketleft",  hl.dsp.window.move({ workspace = "-1" }),                 "mover para workspace anterior")
 bind(mainMod .. " + SHIFT + bracketright", hl.dsp.window.move({ workspace = "+1" }),                 "mover para próximo workspace")
 bind(mainMod .. " + CTRL + bracketleft",   hl.dsp.window.move({ workspace = "-1", follow = false }), "mover (sem seguir) para workspace anterior")

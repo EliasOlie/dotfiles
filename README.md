@@ -65,6 +65,7 @@ hyprctl reload
 | `Super+W` / `Super+Q` | fechar janela |
 | `Super+Shift+Q` | matar o processo da janela (kill -9) |
 | `Super+E` / `Super+B` | arquivos / navegador |
+| `Super+D` | mostrar o desktop (vai para um workspace vazio do monitor; de novo, volta) |
 | `Super+V` / `Super+Alt+Space` | flutuar janela / flutuar todas do workspace |
 | `Super+Shift+F` / `Super+Ctrl+F` | tela cheia / maximizar |
 | `Super+setas` | foco · `+Ctrl` mover · `+Alt` trocar · `+Shift` redimensionar |
@@ -94,9 +95,8 @@ O **wallpaper também é do Quickshell** (substitui o hyprpaper, ~200 MB a menos
 
 Os widgets ficam sobre o wallpaper (abaixo das janelas) e **só aparecem quando o workspace do monitor está vazio** — abriu uma janela, eles somem com um fade.
 
-- **Topo-centro:** frase que troca a cada 10 min em ordem embaralhada (clique troca na hora). As frases ficam em `quickshell/phrases.txt`, uma por linha, e o widget recarrega ao salvar. Easter eggs por data/hora (madrugada, sexta à tarde, 13:37, Natal, dia do π…) ficam em `egg()` no `CenterPiece.qml` — e tem um escondido para quem clicar demais e quick actions — projetos, senhas, print, luz noturna, não perturbe, game mode, bloquear. Os toggles ficam lima quando ligados.
+- **Topo-centro:** frase que troca a cada 10 min em ordem embaralhada (clique troca na hora). As frases ficam em `quickshell/phrases.txt`, uma por linha, e o widget recarrega ao salvar. Easter eggs por data/hora (madrugada, sexta à tarde, 13:37, Natal, dia do π…) ficam em `egg()` no `CenterPiece.qml` — e tem um escondido para quem clicar demais e, abaixo, um badge `+ ⌄` que abre os quick actions ao passar o mouse (fecha ao sair): projetos, senhas, print, luz noturna, não perturbe, game mode, bloquear. Badges no estilo do site; os toggles ligados ficam lima cheio.
 - **Relógio:** Archivo 62% / 800 e a data, no canto inferior esquerdo.
-- **Apps:** fixados (`pinned` em `DesktopWidgets.qml`) + os abertos. Clique foca ou abre; botão do meio abre outra janela.
 - **Mídia:** o player ativo (MPRIS: navegador, Spotify, mpv…); some quando nada está aberto.
 - **Sistema:** CPU, RAM, temperatura, GPU NVIDIA e disco. Clique abre o `htop`.
 - **Agenda:** lê `~/.local/share/eliasolie/agenda.json` e atualiza sozinho quando o arquivo muda (até 4 eventos). Formato:

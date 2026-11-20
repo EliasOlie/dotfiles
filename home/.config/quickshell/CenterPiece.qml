@@ -147,53 +147,55 @@ Column {
     function refreshSoon() { refresh.restart() }
     Timer { id: refresh; interval: 400; onTriggered: stateProc.running = true }
 
-    Row {
+    // Botão "+ ⌄": passou o mouse (ou clicou), abre os badges; saiu da área, fecha
+    Item {
+        id: qaArea
         anchors.horizontalCenter: parent.horizontalCenter
-        spacing: 0
+        property bool open: false
+        width: Math.max(trigger.width, actions.implicitWidth)
+        height: trigger.height + (open ? actions.implicitHeight + 12 : 0)
+        Behavior on height { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } }
 
-        Repeater {
-            model: [
-                { label: "projetos",     on: false,          cmd: [center.scripts + "/projects.sh"] },
-                { label: "senhas",       on: false,          cmd: [center.scripts + "/bitwarden.sh"] },
-                { label: "print",        on: false,          cmd: [center.scripts + "/screenshot.sh", "area"] },
-                { label: center.nightOn ? "luz noturna " + center.nightTemp + "K" : "luz noturna", on: center.nightOn, cmd: [center.scripts + "/nightlight.sh", "toggle"] },
-                { label: "não perturbe", on: center.dndOn,   cmd: ["swaync-client", "-d", "-sw"] },
-                { label: "game mode",    on: center.gameOn,  cmd: ["hyprctl", "repl", "GameModeToggle()"] },
-                { label: "bloquear",     on: false,          cmd: ["sh", "-c", "pidof hyprlock || hyprlock"] }
-            ]
-            delegate: Row {
-                required property var modelData
-                required property int index
+        HoverHandler {
+            onHoveredChanged: hovered ? closeTimer.stop() : closeTimer.restart()
+        }
+        Timer { id: closeTimer; interval: 260; onTriggered: qaArea.open = false }
 
-                Text {
-                    visible: index > 0
-                    text: "  ·  "
-                    color: Theme.line; font.family: Theme.mono; font.pixelSize: 12
-                }
-                Text {
+        Badge {
+            id: trigger
+            anchors.horizontalCenter: parent.horizontalCenter
+            text: "+"
+            on: qaArea.open
+            implicitWidth: 64
+            onHoveredChanged: if (hovered) { qaArea.open = true; closeTimer.stop() }
+            onClicked: qaArea.open = !qaArea.open
+            label.text: qaArea.open ? "+  \uf077" : "+  \uf078"   // chevron vira pra cima quando aberto
+        }
+
+        Row {
+            id: actions
+            anchors { horizontalCenter: parent.horizontalCenter; top: trigger.bottom; topMargin: 12 }
+            spacing: 8
+            opacity: qaArea.open ? 1 : 0
+            visible: opacity > 0
+            Behavior on opacity { NumberAnimation { duration: 140 } }
+            transform: Translate { y: qaArea.open ? 0 : -6; Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
+
+            Repeater {
+                model: [
+                    { label: "projetos",     on: false,          cmd: [center.scripts + "/projects.sh"] },
+                    { label: "senhas",       on: false,          cmd: [center.scripts + "/bitwarden.sh"] },
+                    { label: "print",        on: false,          cmd: [center.scripts + "/screenshot.sh", "area"] },
+                    { label: center.nightOn ? "luz noturna " + center.nightTemp + "K" : "luz noturna", on: center.nightOn, cmd: [center.scripts + "/nightlight.sh", "toggle"] },
+                    { label: "não perturbe", on: center.dndOn,   cmd: ["swaync-client", "-d", "-sw"] },
+                    { label: "game mode",    on: center.gameOn,  cmd: ["hyprctl", "repl", "GameModeToggle()"] },
+                    { label: "bloquear",     on: false,          cmd: ["sh", "-c", "pidof hyprlock || hyprlock"] }
+                ]
+                delegate: Badge {
+                    required property var modelData
                     text: modelData.label
-                    color: modelData.on ? Theme.signal : (qa.containsMouse ? Theme.bone : Theme.statik)
-                    font.family: Theme.mono
-                    font.pixelSize: 12
-                    font.letterSpacing: 1
-                    Behavior on color { ColorAnimation { duration: 120 } }
-
-                    // Sublinhado lima no hover
-                    Rectangle {
-                        anchors { left: parent.left; right: parent.right; top: parent.bottom; topMargin: 3 }
-                        height: 1
-                        color: Theme.signal
-                        opacity: qa.containsMouse ? 1 : 0
-                        Behavior on opacity { NumberAnimation { duration: 120 } }
-                    }
-                    MouseArea {
-                        id: qa
-                        anchors.fill: parent
-                        anchors.margins: -6
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: { Quickshell.execDetached(modelData.cmd); center.refreshSoon() }
-                    }
+                    on: modelData.on
+                    onClicked: { Quickshell.execDetached(modelData.cmd); center.refreshSoon() }
                 }
             }
         }

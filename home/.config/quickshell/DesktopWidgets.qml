@@ -42,68 +42,11 @@ PanelWindow {
             visible: content.visible
         }
 
-        // =============================================== ESQUERDA: apps + relógio
+        // =============================================== ESQUERDA: relógio
         Column {
             anchors { left: parent.left; bottom: parent.bottom; leftMargin: desk.edge; bottomMargin: desk.edge - 20 }
             spacing: 18
 
-            // Apps fixados + abertos
-            Row {
-                id: apps
-                spacing: 10
-                readonly property var pinned: ["kitty", "brave-browser", "org.kde.dolphin"]
-                readonly property var running: ToplevelManager.toplevels.values
-                readonly property var ids: {
-                    const out = pinned.slice()
-                    for (const t of running) if (t.appId && !out.includes(t.appId)) out.push(t.appId)
-                    return out
-                }
-                Repeater {
-                    model: apps.ids
-                    delegate: Rectangle {
-                        id: tile
-                        required property string modelData
-                        readonly property var entry: DesktopEntries.heuristicLookup(modelData)
-                        readonly property var wins: apps.running.filter(t => t.appId === modelData)
-                        width: 56; height: 56
-                        color: tileMouse.containsMouse ? Theme.graphite : Theme.void_
-                        border.width: 1
-                        border.color: tileMouse.containsMouse ? Theme.signal : Theme.line
-                        Behavior on border.color { ColorAnimation { duration: 120 } }
-
-                        Image {
-                            anchors.centerIn: parent
-                            width: 28; height: 28
-                            sourceSize: Qt.size(56, 56)
-                            source: Quickshell.iconPath(tile.entry ? tile.entry.icon : tile.modelData, "application-x-executable")
-                        }
-                        Rectangle {
-                            visible: tile.wins.length > 0
-                            anchors { bottom: parent.bottom; horizontalCenter: parent.horizontalCenter; bottomMargin: 5 }
-                            width: 10; height: 2; color: Theme.signal
-                        }
-                        MouseArea {
-                            id: tileMouse
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            acceptedButtons: Qt.LeftButton | Qt.MiddleButton
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: mouse => {
-                                if (mouse.button === Qt.LeftButton && tile.wins.length > 0) tile.wins[0].activate()
-                                else if (tile.entry) tile.entry.execute()
-                            }
-                        }
-                        Text {
-                            visible: tileMouse.containsMouse
-                            anchors { top: parent.bottom; topMargin: 6; horizontalCenter: parent.horizontalCenter }
-                            text: tile.entry ? tile.entry.name.toLowerCase() : tile.modelData
-                            color: Theme.statik; font.family: Theme.mono; font.pixelSize: 10
-                        }
-                    }
-                }
-            }
-
-            Item { width: 1; height: 6 }
 
             // Relógio grande (Archivo 62% / 800, igual ao manual)
             Text {
