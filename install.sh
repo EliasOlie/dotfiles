@@ -24,6 +24,11 @@ done
 if (( want_pkgs )); then
   echo "==> Pacotes"
   grep -vE '^\s*(#|$)' packages.txt | xargs sudo pacman -S --needed --noconfirm
+  if command -v yay >/dev/null; then
+    grep -vE '^\s*(#|$)' packages-aur.txt | xargs yay -S --needed --noconfirm
+  else
+    echo "   (yay não encontrado: instale à mão os pacotes de packages-aur.txt)"
+  fi
 fi
 
 echo "==> oh-my-zsh + plugins"
@@ -61,7 +66,7 @@ echo "==> Preferências GTK (gsettings)"
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark'
 gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
-gsettings set org.gnome.desktop.interface cursor-theme 'Adwaita'
+gsettings set org.gnome.desktop.interface cursor-theme 'Bibata-Modern-Classic'
 gsettings set org.gnome.desktop.interface font-name 'Archivo 10'
 gsettings set org.gnome.desktop.interface monospace-font-name 'JetBrainsMono Nerd Font 10'
 

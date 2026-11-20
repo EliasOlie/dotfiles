@@ -1,6 +1,5 @@
 # Base
 hyprland
-hyprpaper
 hypridle
 hyprlock
 hyprsunset

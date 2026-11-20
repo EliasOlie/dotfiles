@@ -65,8 +65,8 @@ hl.animation({ leaf = "workspaces", enabled = true, speed = 2.5, bezier = "snap"
 
 -- Tema / cursor / Qt
 hl.env("QT_QPA_PLATFORMTHEME", "qt6ct")
-hl.env("XCURSOR_THEME", "Adwaita")
-hl.env("HYPRCURSOR_THEME", "Adwaita")
+hl.env("XCURSOR_THEME", "Bibata-Modern-Classic")
+hl.env("HYPRCURSOR_THEME", "Bibata-Modern-Classic")
 
 -- Pinentry do Bitwarden (rbw) e janelas pequenas flutuando centralizadas
 for _, cls in ipairs({ "^pinentry-qt$", "^org.pulseaudio.pavucontrol$", "^blueman-manager$", "^nm-connection-editor$" }) do
@@ -75,9 +75,8 @@ end
 
 -- Autostart do visual
 hl.on("hyprland.start", function()
-    hl.exec_cmd("hyprpaper")
     hl.exec_cmd("waybar")
-    hl.exec_cmd("qs")                 -- widgets do desktop (Quickshell)
+    hl.exec_cmd("qs")                 -- wallpaper vivo + widgets do desktop (Quickshell)
     hl.exec_cmd("hypridle")
     hl.exec_cmd("hyprsunset")         -- luz noturna automática (hyprsunset.conf)
     hl.exec_cmd("nm-applet --indicator")

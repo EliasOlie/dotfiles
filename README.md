@@ -52,7 +52,9 @@ hyprctl reload
 | `home/.config/rofi-rbw.rc` | Bitwarden no rofi |
 | `home/.config/quickshell/` | widgets do desktop: relógio, apps, agenda, mídia e sistema (Quickshell) |
 | `system/sddm/eliasolie/` | tema da tela de login (SDDM, Qt6) |
-| `rice/gen-wallpaper.py` | gera o wallpaper em qualquer resolução: `python3 rice/gen-wallpaper.py saida.png 2560 1440` (`--dot` inclui o ponto lima) |
+| `brave-theme/` | tema do Brave na paleta: `brave://extensions` → modo desenvolvedor → **Carregar sem compactação** → esta pasta |
+| `packages-aur.txt` | pacotes do AUR (cursor Bibata) |
+| `rice/gen-wallpaper.py` | gera o PNG do wallpaper (usado no bloqueio e no SDDM) em qualquer resolução: `python3 rice/gen-wallpaper.py saida.png 2560 1440` (`--dot` inclui o ponto lima) |
 
 ## Atalhos
 
@@ -88,7 +90,9 @@ Workspaces por monitor: o monitor 1 (`eDP-1`) usa os IDs 1–10 e o monitor 2 (`
 
 ## Widgets do desktop (Quickshell)
 
-Ficam sobre o wallpaper (camada de fundo, abaixo das janelas) e **só aparecem quando o workspace do monitor está vazio** — abriu uma janela, eles somem com um fade.
+O **wallpaper também é do Quickshell** (substitui o hyprpaper, ~200 MB a menos): fundo void com grade de pontos que **acendem em lima perto do mouse**.
+
+Os widgets ficam sobre o wallpaper (abaixo das janelas) e **só aparecem quando o workspace do monitor está vazio** — abriu uma janela, eles somem com um fade.
 
 - **Topo-centro:** frase que troca a cada 10 min em ordem embaralhada (clique troca na hora). As frases ficam em `quickshell/phrases.txt`, uma por linha, e o widget recarrega ao salvar. Easter eggs por data/hora (madrugada, sexta à tarde, 13:37, Natal, dia do π…) ficam em `egg()` no `CenterPiece.qml` — e tem um escondido para quem clicar demais e quick actions — projetos, senhas, print, luz noturna, não perturbe, game mode, bloquear. Os toggles ficam lima quando ligados.
 - **Relógio:** Archivo 62% / 800 e a data, no canto inferior esquerdo.

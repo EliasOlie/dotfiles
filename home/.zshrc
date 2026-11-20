@@ -156,9 +156,21 @@ fi
 export PNPM_HOME="$HOME/.local/share/pnpm"
 export PATH="$PNPM_HOME:$PATH"
 
+# nvm "preguiçoso": o node padrão (alias default) entra no PATH na hora, sem
+# carregar o nvm. O nvm completo só carrega na primeira vez que você digita `nvm`.
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+_nvm_default_bin() {
+  local v d
+  v=$(<"$NVM_DIR/alias/default" 2>/dev/null); v=${v#v}
+  for d in "$NVM_DIR"/versions/node/v${v}*(N/nOn); do print -r -- "$d/bin"; return; done
+}
+_nvm_bin=$(_nvm_default_bin); [[ -n $_nvm_bin ]] && export PATH="$_nvm_bin:$PATH"; unset _nvm_bin
+nvm() {
+  unfunction nvm
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+  nvm "$@"
+}
 
 # pnpm
 export PNPM_HOME='/home/eliasolie/.local/share/pnpm'

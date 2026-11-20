@@ -1,0 +1,37 @@
+{
+  "manifest_version": 3,
+  "name": "eliasolie",
+  "version": "1.0",
+  "description": "Tema eliasolie: void, bone e signal (lima).",
+  "theme": {
+    "colors": {
+      "frame":                        [5, 5, 5],
+      "frame_inactive":               [5, 5, 5],
+      "frame_incognito":              [5, 5, 5],
+      "frame_incognito_inactive":     [5, 5, 5],
+      "background_tab":               [5, 5, 5],
+      "background_tab_inactive":      [5, 5, 5],
+      "toolbar":                      [22, 22, 20],
+      "tab_text":                     [237, 237, 232],
+      "tab_background_text":          [138, 138, 132],
+      "tab_background_text_inactive": [90, 90, 86],
+      "bookmark_text":                [138, 138, 132],
+      "toolbar_text":                 [237, 237, 232],
+      "toolbar_button_icon":          [237, 237, 232],
+      "omnibox_background":           [5, 5, 5],
+      "omnibox_text":                 [237, 237, 232],
+      "button_background":            [22, 22, 20],
+      "ntp_background":               [5, 5, 5],
+      "ntp_text":                     [237, 237, 232],
+      "ntp_link":                     [200, 240, 49],
+      "ntp_header":                   [42, 42, 39],
+      "control_button_background":    [5, 5, 5]
+    },
+    "tints": {
+      "buttons": [-1, -1, -1]
+    },
+    "properties": {
+      "ntp_background_alignment": "center"
+    }
+  }
+}

@@ -1,0 +1,2 @@
+# Pacotes do AUR (instalados com yay pelo install.sh --packages)
+bibata-cursor-theme-bin

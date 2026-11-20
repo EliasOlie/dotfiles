@@ -30,6 +30,12 @@ PanelWindow {
         visible: opacity > 0
         Behavior on opacity { NumberAnimation { duration: 180; easing.type: Easing.OutCubic } }
 
+        // Informa a posição do mouse ao wallpaper vivo (os pontos acendem perto do cursor)
+        HoverHandler {
+            onPointChanged: { Pointer.screen = desk.modelData.name; Pointer.x = point.position.x; Pointer.y = point.position.y }
+            onHoveredChanged: { Pointer.screen = desk.modelData.name; Pointer.inside = hovered }
+        }
+
         // =============================================== TOPO-CENTRO: frase do dia + quick actions
         CenterPiece {
             anchors { top: parent.top; horizontalCenter: parent.horizontalCenter; topMargin: 96 }
