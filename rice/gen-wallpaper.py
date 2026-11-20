@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
-"""Wallpaper minimalista na paleta eliasolie: fundo void, grade de pontos sutil e um ponto 'signal'."""
+"""Wallpaper minimalista na paleta eliasolie: fundo void e grade de pontos sutil.
+Use --dot para incluir o ponto 'signal' perto do canto inferior direito (usado no SDDM)."""
 import struct, zlib, sys
+DOT_ON = "--dot" in sys.argv
+sys.argv = [a for a in sys.argv if a != "--dot"]
 W, H = (int(x) for x in (sys.argv[2:4] if len(sys.argv) > 3 else (1920, 1080)))
 out = sys.argv[1] if len(sys.argv) > 1 else "wallpaper.png"
 VOID, DOT, SIGNAL = (5, 5, 5), (34, 34, 31), (200, 240, 49)
@@ -13,7 +16,7 @@ for y in range(H):
         c = VOID
         if x % STEP == 0 and y % STEP == 0:
             c = DOT
-        if abs(x - sx) <= 3 and abs(y - sy) <= 3:
+        if DOT_ON and abs(x - sx) <= 3 and abs(y - sy) <= 3:
             c = SIGNAL
         row += bytes(c)
     rows.append(bytes(row))
