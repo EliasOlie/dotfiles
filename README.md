@@ -74,6 +74,7 @@ hyprctl reload
 | `Super+Ctrl+F9..F12` | mover workspace para o monitor da esquerda/direita/cima/baixo |
 | `Super+Alt+V` / `E` / `C` | clipboard / emoji / calculadora |
 | `Super+S` / `Super+Ctrl+S` | busca na web / alternar janelas |
+| `Super+Shift+O` | abrir projeto (repositórios git em `~/work`) num terminal |
 | `Super+Shift+P` | Bitwarden: digita login (no menu: `alt u` copia usuário, `alt p` senha, `alt t` TOTP) |
 | `Super+Alt+P` | Bitwarden: copia TOTP |
 | `Super+Shift+G` | game mode (sem animações, blur, sombras e gaps) |
@@ -88,6 +89,7 @@ Workspaces por monitor: o monitor 1 (`eDP-1`) usa os IDs 1–10 e o monitor 2 (`
 
 Ficam sobre o wallpaper (camada de fundo, abaixo das janelas) e **só aparecem quando o workspace do monitor está vazio** — abriu uma janela, eles somem com um fade.
 
+- **Centro:** frase de dev do dia (clique troca; lista em `CenterPiece.qml`) e quick actions — projetos, senhas, print, luz noturna, não perturbe, game mode, bloquear. Os toggles ficam lima quando ligados.
 - **Relógio:** Archivo 62% / 800 e a data, no canto inferior esquerdo.
 - **Apps:** fixados (`pinned` em `DesktopWidgets.qml`) + os abertos. Clique foca ou abre; botão do meio abre outra janela.
 - **Mídia:** o player ativo (MPRIS: navegador, Spotify, mpv…); some quando nada está aberto.

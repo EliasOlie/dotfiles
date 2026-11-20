@@ -181,6 +181,8 @@ bind(mainMod .. " + ALT + C",  sh("pkill rofi || rofi -show calc -modi calc -no-
 bind(mainMod .. " + S",        sh(scripts .. "/websearch.sh"),                             "busca na web")
 bind(mainMod .. " + CTRL + S", sh("pkill rofi || rofi -show window"),                     "alternar janelas")
 
+bind(mainMod .. " + SHIFT + O", sh(scripts .. "/projects.sh"), "abrir projeto (~/work)")
+
 -- Bitwarden (Vaultwarden auto-hospedado) via rbw + rofi-rbw
 bind(mainMod .. " + SHIFT + P", sh(scripts .. "/bitwarden.sh"),      "bitwarden: digitar login/senha")
 bind(mainMod .. " + ALT + P",   sh(scripts .. "/bitwarden.sh totp"), "bitwarden: copiar código TOTP")
@@ -189,8 +191,10 @@ bind(mainMod .. " + ALT + P",   sh(scripts .. "/bitwarden.sh totp"), "bitwarden:
 -- Game mode (Super+Shift+G): sem animações, blur, sombras e gaps
 -- Desligar = recarregar a config (volta tudo ao normal)
 -- ------------------------------------------------------------
+-- Função global: também chamada pelos widgets do desktop via
+--   hyprctl repl 'GameModeToggle()'   (estado: hyprctl repl 'return tostring(GAMEMODE)')
 GAMEMODE = GAMEMODE or false
-bind(mainMod .. " + SHIFT + G", function()
+function GameModeToggle()
     if not GAMEMODE then
         hl.config({
             animations = { enabled = false },
@@ -204,7 +208,8 @@ bind(mainMod .. " + SHIFT + G", function()
         hl.dispatch(hl.dsp.reload_config())
         hl.notification.create({ text = "Game mode desligado", timeout = 2000 })
     end
-end, "game mode")
+end
+bind(mainMod .. " + SHIFT + G", GameModeToggle, "game mode")
 
 -- Luz noturna (hyprsunset)
 bind(mainMod .. " + N", sh("pkill -x hyprsunset || hyprsunset -t 4500"), "luz noturna")

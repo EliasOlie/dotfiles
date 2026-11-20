@@ -30,6 +30,13 @@ PanelWindow {
         visible: opacity > 0
         Behavior on opacity { NumberAnimation { duration: 180; easing.type: Easing.OutCubic } }
 
+        // =============================================== CENTRO: frase do dia + quick actions
+        CenterPiece {
+            anchors.centerIn: parent
+            anchors.verticalCenterOffset: -40
+            visible: content.visible
+        }
+
         // =============================================== ESQUERDA: apps + relógio
         Column {
             anchors { left: parent.left; bottom: parent.bottom; leftMargin: desk.edge; bottomMargin: desk.edge - 20 }
