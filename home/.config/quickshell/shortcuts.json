@@ -1,0 +1,41 @@
+{
+  "_ajuda": "Atalhos do painel esquerdo do desktop. Cada item: name (aparece no rodapé ao passar o mouse), icon (imagem em icons/) OU glyph (ícone da Nerd Font), badge (glyph pequeno no canto, opcional) e url (abre no Brave) OU cmd (comando). Salvou, o painel recarrega.",
+  "items": [
+    {
+      "name": "Webmail ConectaMe",
+      "icon": "icons/conectame.png",
+      "badge": "󰇮",
+      "url": "https://mail.conectame.com.br"
+    },
+    {
+      "name": "GitHub",
+      "glyph": "",
+      "url": "https://github.com/EliasOlie"
+    },
+    {
+      "name": "Hostinger hPanel",
+      "glyph": "󰒋",
+      "url": "https://hpanel.hostinger.com"
+    },
+    {
+      "name": "Vercel",
+      "glyph": "󰔶",
+      "url": "https://vercel.com/dashboard"
+    },
+    {
+      "name": "WhatsApp Web",
+      "glyph": "",
+      "url": "https://web.whatsapp.com"
+    },
+    {
+      "name": "eliasolie.com.br",
+      "glyph": "󰖟",
+      "url": "https://www.eliasolie.com.br"
+    },
+    {
+      "name": "YouTube",
+      "glyph": "",
+      "url": "https://www.youtube.com"
+    }
+  ]
+}

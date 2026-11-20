@@ -42,11 +42,15 @@ PanelWindow {
             visible: content.visible
         }
 
+        // =============================================== TOPO-ESQUERDO: atalhos
+        ShortcutsPanel {
+            anchors { left: parent.left; top: parent.top; leftMargin: desk.edge; topMargin: desk.edge }
+        }
+
         // =============================================== ESQUERDA: relógio
         Column {
             anchors { left: parent.left; bottom: parent.bottom; leftMargin: desk.edge; bottomMargin: desk.edge - 20 }
             spacing: 18
-
 
             // Relógio grande (Archivo 62% / 800, igual ao manual)
             Text {
