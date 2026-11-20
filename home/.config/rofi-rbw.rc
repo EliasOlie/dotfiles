@@ -1,0 +1,11 @@
+# rofi-rbw — Enter digita usuário + senha. Atalhos dentro do menu:
+#   Alt+u  copia o USUÁRIO      Alt+p  copia a SENHA      Alt+t  copia o TOTP
+#   Alt+2  digita só o usuário  Alt+3  digita só a senha  Alt+m  menu com todos os campos
+# Cópias saem com --sensitive: não entram no histórico do cliphist e somem em 20 s.
+action = type
+typer = wtype
+clipboarder = wl-copy
+clear-after = 20
+prompt = bitwarden
+use-notify-send = true
+keybindings = Alt+1:type:username:tab:password,Alt+2:type:username,Alt+3:type:password,Alt+4:type:totp,Alt+u:copy:username,Alt+p:copy:password,Alt+c:copy:password,Alt+t:copy:totp,Alt+m::menu

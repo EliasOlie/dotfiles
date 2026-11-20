@@ -1,0 +1,12 @@
+[SddmGreeterTheme]
+Name=eliasolie
+Description=Login minimalista na identidade eliasolie
+Author=Elias Oliveira
+License=MIT
+Type=sddm-theme
+Version=1.0
+MainScript=Main.qml
+ConfigFile=theme.conf
+Theme-Id=eliasolie
+Theme-API=2.0
+QtVersion=6

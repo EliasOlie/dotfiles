@@ -1,0 +1,117 @@
+// Barra do topo — colada, minimalista (paleta eliasolie)
+{
+  "layer": "top",
+  "position": "top",
+  "height": 28,
+  "spacing": 0,
+  "margin": "0",
+
+  "modules-left":   ["custom/logo", "hyprland/workspaces", "hyprland/window"],
+  "modules-center": ["clock"],
+  "modules-right":  ["tray", "custom/gpu", "cpu", "memory", "pulseaudio", "network", "bluetooth", "battery", "custom/notification"],
+
+  "custom/logo": {
+    "format": "●",
+    "tooltip": false,
+    "on-click": "pkill rofi || rofi -show drun"
+  },
+
+  // Workspaces por monitor: o HDMI usa IDs 11..20, mas mostramos 1..10
+  "hyprland/workspaces": {
+    "format": "{icon}",
+    "all-outputs": false,
+    "show-special": false,
+    "format-icons": {
+      "1": "1", "2": "2", "3": "3", "4": "4", "5": "5",
+      "6": "6", "7": "7", "8": "8", "9": "9", "10": "0",
+      "11": "1", "12": "2", "13": "3", "14": "4", "15": "5",
+      "16": "6", "17": "7", "18": "8", "19": "9", "20": "0"
+    }
+  },
+
+  "hyprland/window": {
+    "format": "{}",
+    "max-length": 60,
+    "separate-outputs": true,
+    "rewrite": { "": "—" }
+  },
+
+  "clock": {
+    "format": "{:%H:%M}",
+    "format-alt": "{:%a %d %b  %H:%M}",
+    "locale": "pt_BR.UTF-8",
+    "tooltip-format": "<tt>{calendar}</tt>",
+    "calendar": {
+      "mode": "month",
+      "format": {
+        "months":   "<span color='#EDEDE8'><b>{}</b></span>",
+        "weekdays": "<span color='#8A8A84'>{}</span>",
+        "today":    "<span color='#C8F031'><b>{}</b></span>"
+      }
+    }
+  },
+
+  "tray": { "icon-size": 14, "spacing": 8 },
+
+  "custom/gpu": {
+    "exec": "nvidia-smi --query-gpu=utilization.gpu,temperature.gpu --format=csv,noheader,nounits 2>/dev/null | awk -F', ' '{printf \"{\\\"text\\\":\\\"GPU %s%%\\\",\\\"tooltip\\\":\\\"MX250 · %s°C\\\"}\\n\", $1, $2}'",
+    "return-type": "json",
+    "interval": 10
+  },
+
+  "cpu":    { "format": "CPU {usage}%", "interval": 5 },
+  "memory": { "format": "RAM {percentage}%", "interval": 10, "tooltip-format": "{used:0.1f} / {total:0.1f} GiB" },
+
+  "pulseaudio": {
+    "format": "VOL {volume}%",
+    "format-muted": "VOL ——",
+    "on-click": "pavucontrol",
+    "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+    "scroll-step": 5
+  },
+
+  "network": {
+    "format-wifi": "WIFI {signalStrength}%",
+    "format-ethernet": "ETH",
+    "format-disconnected": "OFFLINE",
+    "tooltip-format-wifi": "{essid} · {ipaddr}",
+    "tooltip-format-ethernet": "{ifname} · {ipaddr}",
+    "on-click": "nm-connection-editor"
+  },
+
+  "bluetooth": {
+    "format": "BT",
+    "format-disabled": "",
+    "format-off": "",
+    "format-connected": "BT {num_connections}",
+    "tooltip-format-connected": "{device_enumerate}",
+    "tooltip-format-enumerate-connected": "{device_alias}",
+    "on-click": "blueman-manager"
+  },
+
+  "battery": {
+    "states": { "warning": 25, "critical": 12 },
+    "format": "BAT {capacity}%",
+    "format-charging": "BAT {capacity}% +",
+    "format-plugged": "AC {capacity}%",
+    "tooltip-format": "{timeTo}"
+  },
+
+  "custom/notification": {
+    "tooltip": false,
+    "format": "{icon}",
+    "format-icons": {
+      "notification": "<span color='#C8F031'>●</span>",
+      "none": "○",
+      "dnd-notification": "<span color='#FF5A4E'>●</span>",
+      "dnd-none": "◌",
+      "inhibited-notification": "●", "inhibited-none": "○",
+      "dnd-inhibited-notification": "●", "dnd-inhibited-none": "◌"
+    },
+    "return-type": "json",
+    "exec": "swaync-client -swb",
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw",
+    "escape": true
+  }
+}

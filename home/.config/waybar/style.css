@@ -1,0 +1,68 @@
+/* Paleta eliasolie: void #050505 · graphite #161614 · line #2A2A27 · static #8A8A84 · bone #EDEDE8 · signal #C8F031 · alert #FF5A4E */
+
+* {
+  font-family: "JetBrainsMono Nerd Font", "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 500;
+  min-height: 0;
+  border: none;
+  border-radius: 0;
+}
+
+window#waybar {
+  background: #050505;
+  color: #8A8A84;
+  border-bottom: 2px solid #C8F031;
+}
+
+tooltip {
+  background: #161614;
+  border: 1px solid #2A2A27;
+  color: #EDEDE8;
+}
+
+#custom-logo {
+  color: #C8F031;
+  padding: 0 12px 0 14px;
+  font-size: 12px;
+}
+
+#workspaces { margin-right: 10px; }
+#workspaces button {
+  padding: 0 8px;
+  color: #8A8A84;
+  background: transparent;
+  border-bottom: 2px solid transparent;
+}
+#workspaces button:hover { background: #161614; color: #EDEDE8; }
+#workspaces button.active,
+#workspaces button.visible.active {
+  color: #050505;
+  background: #C8F031;
+}
+#workspaces button.visible { color: #EDEDE8; }
+#workspaces button.urgent  { color: #050505; background: #FF5A4E; }
+
+#window { color: #8A8A84; }
+
+#clock {
+  color: #EDEDE8;
+  font-family: "Archivo", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+#tray, #custom-gpu, #cpu, #memory, #pulseaudio, #network, #bluetooth, #battery, #custom-notification {
+  padding: 0 10px;
+  color: #8A8A84;
+}
+#custom-notification { padding-right: 14px; }
+
+#pulseaudio.muted,
+#network.disconnected { color: #2A2A27; }
+#battery.charging, #battery.plugged { color: #C8F031; }
+#battery.warning:not(.charging) { color: #FF5A4E; }
+#battery.critical:not(.charging) { color: #050505; background: #FF5A4E; }
+
+#tray > .needs-attention { background: #FF5A4E; }

@@ -1,0 +1,64 @@
+/* swaync — tema eliasolie */
+@define-color void #050505;
+@define-color graphite #161614;
+@define-color line #2A2A27;
+@define-color static #8A8A84;
+@define-color bone #EDEDE8;
+@define-color signal #C8F031;
+@define-color alert #FF5A4E;
+
+* {
+  font-family: "JetBrainsMono Nerd Font", monospace;
+  font-size: 12px;
+  border-radius: 0;
+  box-shadow: none;
+  text-shadow: none;
+}
+
+/* Pop-ups */
+.notification-row { outline: none; background: transparent; }
+.notification-row .notification-background { padding: 4px 0; background: transparent; }
+.notification-row .notification-background .notification {
+  background: @void;
+  border: 1px solid @line;
+  border-left: 3px solid @signal;
+  padding: 10px;
+}
+.notification-row .notification-background .notification.critical { border-left-color: @alert; }
+.notification .summary   { color: @bone; font-weight: 700; }
+.notification .body      { color: @static; }
+.notification .time      { color: @line; }
+.notification .notification-default-action:hover { background: @graphite; }
+.close-button {
+  background: transparent; color: @static; border: none; min-width: 20px; min-height: 20px;
+}
+.close-button:hover { color: @alert; }
+.notification-action { background: @graphite; color: @bone; border: 1px solid @line; }
+.notification-action:hover { background: @signal; color: @void; }
+
+/* Barra de progresso (volume/brilho do osd.sh) */
+progressbar trough   { background: @line; min-height: 3px; }
+progressbar progress { background: @signal; min-height: 3px; }
+
+/* Central de controle */
+.control-center {
+  background: @void;
+  border: 1px solid @line;
+  border-top: 2px solid @signal;
+  padding: 10px;
+}
+.control-center .notification-row .notification-background .notification { background: @graphite; }
+.widget-title > label { color: @signal; font-weight: 700; letter-spacing: 2px; }
+.widget-title > button { background: transparent; color: @static; border: 1px solid @line; padding: 2px 10px; }
+.widget-title > button:hover { color: @void; background: @signal; }
+.widget-dnd > label { color: @static; }
+.widget-dnd > switch { background: @line; border: none; }
+.widget-dnd > switch:checked { background: @alert; }
+.widget-dnd > switch slider { background: @bone; }
+.widget-mpris .widget-mpris-player { background: @graphite; border: 1px solid @line; padding: 8px; }
+.widget-mpris .widget-mpris-title { color: @bone; font-weight: 700; }
+.widget-mpris .widget-mpris-subtitle { color: @static; }
+.widget-volume, .widget-backlight { background: @graphite; padding: 6px 10px; color: @static; }
+.widget-volume trough, .widget-backlight trough { background: @line; min-height: 3px; }
+.widget-volume highlight, .widget-backlight highlight { background: @signal; }
+.widget-volume slider, .widget-backlight slider { background: @bone; min-width: 10px; min-height: 10px; }

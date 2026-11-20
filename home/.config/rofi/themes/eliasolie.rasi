@@ -1,0 +1,55 @@
+/* Tema eliasolie para rofi — sólido, cantos retos, destaque lima */
+* {
+    void:     #050505;
+    graphite: #161614;
+    line:     #2A2A27;
+    static:   #8A8A84;
+    bone:     #EDEDE8;
+    signal:   #C8F031;
+    alert:    #FF5A4E;
+
+    background-color: transparent;
+    text-color:       @bone;
+    font:             "JetBrainsMono Nerd Font 11";
+    margin: 0; padding: 0; spacing: 0;
+}
+
+window {
+    width:            560px;
+    location:         center;
+    background-color: @void;
+    border:           2px;
+    border-color:     @signal;
+    border-radius:    0;
+}
+
+mainbox { padding: 14px; spacing: 10px; children: [ inputbar, message, listview, mode-switcher ]; }
+
+inputbar {
+    spacing: 10px;
+    padding: 0 0 10px 0;
+    border: 0 0 1px 0;
+    border-color: @line;
+    children: [ prompt, entry ];
+}
+prompt  { text-color: @signal; font: "JetBrainsMono Nerd Font Bold 11"; }
+entry   { placeholder: "buscar"; placeholder-color: @static; cursor: text; }
+
+message  { padding: 6px 0; }
+textbox  { text-color: @static; }
+
+listview { lines: 8; columns: 1; fixed-height: true; scrollbar: false; spacing: 2px; }
+
+element { padding: 7px 10px; spacing: 10px; children: [ element-icon, element-text ]; }
+element-icon { size: 18px; }
+element-text { vertical-align: 0.5; text-color: inherit; }
+element normal.normal,  element alternate.normal { text-color: @static; }
+element normal.urgent,  element alternate.urgent { text-color: @alert; }
+element normal.active,  element alternate.active { text-color: @bone; }
+element selected.normal { background-color: @signal; text-color: @void; }
+element selected.urgent { background-color: @alert;  text-color: @void; }
+element selected.active { background-color: @signal; text-color: @void; }
+
+mode-switcher { spacing: 0; }
+button { padding: 6px; text-color: @static; border: 1px 0 0 0; border-color: @line; }
+button selected { text-color: @signal; border-color: @signal; }

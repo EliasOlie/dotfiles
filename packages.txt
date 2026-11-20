@@ -1,0 +1,46 @@
+# Base
+hyprland
+hyprpaper
+hypridle
+hyprlock
+hyprsunset
+xdg-desktop-portal-hyprland
+xdg-desktop-portal-gtk
+waybar
+quickshell
+swaync
+libnotify
+rofi
+rofi-emoji
+rofi-calc
+kitty
+dolphin
+
+# Ferramentas dos atalhos
+cliphist
+wl-clipboard
+wtype
+grim
+slurp
+swappy
+xdg-user-dirs
+playerctl
+brightnessctl
+jq
+pavucontrol
+blueman
+network-manager-applet
+
+# Visual
+adw-gtk-theme
+breeze
+qt6ct
+papirus-icon-theme
+ttf-jetbrains-mono
+ttf-jetbrains-mono-nerd
+fastfetch
+
+# Bitwarden / Vaultwarden
+rbw
+rofi-rbw
+pinentry

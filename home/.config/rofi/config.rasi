@@ -1,0 +1,16 @@
+configuration {
+    modi:                "drun,run,window,filebrowser";
+    show-icons:          true;
+    icon-theme:          "Papirus-Dark";
+    display-drun:        "apps";
+    display-run:         "run";
+    display-window:      "janelas";
+    display-filebrowser: "arquivos";
+    drun-display-format: "{name}";
+    matching:            "fuzzy";
+    sort:                true;
+    sorting-method:      "fzf";
+    kb-cancel:           "Escape,Super+space";
+}
+
+@theme "eliasolie"

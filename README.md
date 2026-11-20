@@ -1,0 +1,87 @@
+# dotfiles — eliasolie
+
+Ricing **sólido e minimalista** para Arch Linux + Hyprland (config em **Lua**, 0.57+), na identidade visual do eliasolie-site.
+
+## Paleta
+
+| Nome | HEX | Uso |
+|---|---|---|
+| void | `#050505` | fundo |
+| graphite | `#161614` | superfícies (cards, tooltips) |
+| line | `#2A2A27` | bordas inativas, separadores |
+| static | `#8A8A84` | texto secundário |
+| bone | `#EDEDE8` | texto |
+| **signal** | **`#C8F031`** | destaque / ativo |
+| alert | `#FF5A4E` | alertas, erros |
+
+Tipografia: **Archivo** (títulos condensados com largura 62% e peso 800, texto da interface) e **JetBrains Mono Nerd Font** (terminal, barra, menus). Cantos retos em tudo.
+
+## Instalar
+
+```bash
+git clone <este repo> ~/work/dotfiles
+cd ~/work/dotfiles
+./install.sh --all        # pacotes + links no $HOME + SDDM e fonte no sistema
+hyprctl reload
+```
+
+- `./install.sh` sozinho só cria os links (faz backup `*.bak-DATA` do que já existir).
+- Os arquivos em `home/` viram links no `$HOME`: editar `~/.config/hypr/look.lua` já edita o repositório.
+- O `.zshrc` **não** está aqui (tem segredos). Para o tema do prompt, use `ZSH_THEME="eliasolie"` com oh-my-zsh.
+- Bitwarden: depois de instalar, configure o seu servidor:
+  `rbw config set base_url https://SEU-VAULTWARDEN && rbw config set email SEU@EMAIL && rbw login`
+
+## Estrutura
+
+| Caminho | O que é |
+|---|---|
+| `home/.config/hypr/hyprland.lua` | config principal (monitores, input, regras); carrega `keybinds` e `look` |
+| `home/.config/hypr/keybinds.lua` | todos os atalhos |
+| `home/.config/hypr/look.lua` | visual: bordas, gaps, animações, autostart do visual |
+| `home/.config/hypr/hypr{paper,idle,lock}.conf` | wallpaper, inatividade, tela de bloqueio |
+| `home/.config/hypr/scripts/` | screenshot, volume/brilho (OSD), menu de energia, busca, Bitwarden |
+| `home/.config/waybar/` | barra do topo |
+| `home/.config/rofi/` | launcher e menus (tema `eliasolie.rasi`) |
+| `home/.config/swaync/` | notificações e central de controle |
+| `home/.config/kitty/` | terminal (tema `eliasolie.conf`) |
+| `home/.config/gtk-*`, `qt6ct/`, `kdeglobals`, `color-schemes/` | apps GTK, Qt e KDE na paleta |
+| `home/.oh-my-zsh/custom/themes/eliasolie.zsh-theme` | prompt do zsh |
+| `home/.config/rofi-rbw.rc` | Bitwarden no rofi |
+| `system/sddm/eliasolie/` | tema da tela de login (SDDM, Qt6) |
+| `rice/gen-wallpaper.py` | gera o wallpaper em qualquer resolução: `python3 rice/gen-wallpaper.py saida.png 2560 1440` |
+
+## Atalhos
+
+| Atalho | Ação |
+|---|---|
+| `Super+Space` | launcher |
+| `Super+Enter` | terminal |
+| `Super+W` / `Super+Q` | fechar janela |
+| `Super+Shift+Q` | matar o processo da janela (kill -9) |
+| `Super+E` / `Super+B` | arquivos / navegador |
+| `Super+V` / `Super+Alt+Space` | flutuar janela / flutuar todas do workspace |
+| `Super+Shift+F` / `Super+Ctrl+F` | tela cheia / maximizar |
+| `Super+setas` | foco · `+Ctrl` mover · `+Alt` trocar · `+Shift` redimensionar |
+| `Super+1..0` | workspace N **só no monitor atual** |
+| `Super+Ctrl+1..0` | workspace N em **todos os monitores** |
+| `Super+Shift+1..0` / `Super+Alt+1..0` | mover janela para o workspace N (indo junto / sem ir) |
+| `Super+Tab`, `Super+,` `Super+.`, scroll | navegar entre workspaces |
+| `Super+U` / `Super+Shift+U` | workspace especial / mandar janela para ele |
+| `Super+Shift+Enter` | terminal dropdown |
+| `Super+Ctrl+F9..F12` | mover workspace para o monitor da esquerda/direita/cima/baixo |
+| `Super+Alt+V` / `E` / `C` | clipboard / emoji / calculadora |
+| `Super+S` / `Super+Ctrl+S` | busca na web / alternar janelas |
+| `Super+Shift+P` | Bitwarden: digita login (no menu: `alt u` copia usuário, `alt p` senha, `alt t` TOTP) |
+| `Super+Alt+P` | Bitwarden: copia TOTP |
+| `Super+Shift+G` | game mode (sem animações, blur, sombras e gaps) |
+| `Super+N` | luz noturna |
+| `Super+Shift+N` | notificações |
+| `Ctrl+Alt+L` / `Ctrl+Alt+P` / `Ctrl+Alt+Del` | bloquear / menu de energia / sair do Hyprland |
+| `Super+Print` (+`Shift` área, +`Ctrl` 5 s), `Alt+Print`, `Super+Shift+S` | screenshots (salvos em `~/Imagens/Screenshots`) |
+
+Workspaces por monitor: o monitor 1 (`eDP-1`) usa os IDs 1–10 e o monitor 2 (`HDMI-A-1`) usa 11–20; a barra mostra sempre 1–10. A ordem fica em `MONITORS` no `keybinds.lua`.
+
+## Notas
+
+- O Hyprland em Lua não aceita mais `hyprctl dispatch <nome> <args>` nem `hyprctl keyword`. Scripts usam `hyprctl dispatch 'hl.dsp....'` ou `hyprctl repl`.
+- Cópias do Bitwarden saem com `wl-copy --sensitive`: o cliphist não guarda.
