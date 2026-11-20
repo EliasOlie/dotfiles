@@ -23,6 +23,16 @@
       "url": "https://vercel.com/dashboard"
     },
     {
+      "name": "Dokploy",
+      "icon": "icons/dokploy.png",
+      "url": "https://painel.eliasolie.com.br"
+    },
+    {
+      "name": "Cloudflare",
+      "icon": "icons/cloudflare.png",
+      "url": "https://dash.cloudflare.com"
+    },
+    {
       "name": "WhatsApp Web",
       "glyph": "",
       "url": "https://web.whatsapp.com"

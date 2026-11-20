@@ -1,0 +1,7 @@
+{
+  "_ajuda": "Serviços checados pelo card VPS do desktop (HTTP a cada 60 s; responde < 500 = no ar). Para incluir serviços que não devem ir pro repo público, crie ~/.config/eliasolie/vps.json com o mesmo formato: ele substitui este arquivo.",
+  "panel": "https://painel.eliasolie.com.br",
+  "services": [
+    { "name": "dokploy", "url": "https://painel.eliasolie.com.br" }
+  ]
+}

@@ -100,6 +100,7 @@ Os widgets ficam sobre o wallpaper (abaixo das janelas) e **só aparecem quando 
 - **Relógio:** Archivo 62% / 800 e a data, no canto inferior esquerdo.
 - **Mídia:** o player ativo (MPRIS: navegador, Spotify, mpv…); some quando nada está aberto.
 - **Sistema:** CPU, RAM, temperatura, GPU NVIDIA e disco. Clique abre o `htop`.
+- **VPS:** checa por HTTP os serviços de `quickshell/vps.json` a cada 60 s (só com o desktop à mostra). Responde abaixo de 500 = no ar (ponto lima + latência); fora = ponto e borda coral. Clique abre o Dokploy. Serviços privados vão em `~/.config/eliasolie/vps.json` (mesmo formato, fora do repo), que substitui o do repo.
 - **Agenda:** lê `~/.local/share/eliasolie/agenda.json` e atualiza sozinho quando o arquivo muda (até 4 eventos). Formato:
 
   ```json
