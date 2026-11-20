@@ -2,6 +2,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import Quickshell.Hyprland
 
 // Coleta de dados do sistema (um único coletor para todos os monitores)
 Singleton {
@@ -16,6 +17,10 @@ Singleton {
     property real disk: 0       // % usado em /
     property string diskText: ""
 
+    // Só coleta quando algum monitor está com o desktop à mostra (workspace vazio):
+    // com janelas por cima ninguém vê os medidores, então não gasta CPU à toa
+    readonly property bool active: Hyprland.monitors.values.some(m => m.activeWorkspace && m.activeWorkspace.toplevels.values.length === 0)
+
     property var _lastCpu: null
     property string _tempPath: ""
 
@@ -25,7 +30,7 @@ Singleton {
     FileView { id: tempFile; path: root._tempPath }
 
     Timer {
-        interval: 2000; running: true; repeat: true; triggeredOnStart: true
+        interval: 2000; running: root.active; repeat: true; triggeredOnStart: true
         onTriggered: {
             statFile.reload(); memFile.reload()
             if (root._tempPath !== "") tempFile.reload()
@@ -75,7 +80,7 @@ Singleton {
             }
         }
     }
-    Timer { interval: 5000; running: true; repeat: true; triggeredOnStart: true; onTriggered: gpuProc.running = true }
+    Timer { interval: 5000; running: root.active; repeat: true; triggeredOnStart: true; onTriggered: gpuProc.running = true }
 
     // Disco (/) a cada 60 s
     Process {
@@ -91,5 +96,5 @@ Singleton {
             }
         }
     }
-    Timer { interval: 60000; running: true; repeat: true; triggeredOnStart: true; onTriggered: diskProc.running = true }
+    Timer { interval: 60000; running: root.active; repeat: true; triggeredOnStart: true; onTriggered: diskProc.running = true }
 }

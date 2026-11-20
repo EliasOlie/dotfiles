@@ -88,16 +88,22 @@ Column {
 
         MouseArea {
             id: phraseMouse
-            anchors.fill: parent
+            // Área de clique larga e fixa: a frase muda de largura a cada troca,
+            // então clicando rápido o mouse não "cai fora" da frase nova
+            anchors { fill: parent; leftMargin: -260; rightMargin: -260; topMargin: -14; bottomMargin: -14 }
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
-            onClicked: {
+            function hit() {
+                if (eggHold.running) return            // segura o easter egg na tela por uns segundos
                 center.clicks++; clickReset.restart()
-                // Easter egg escondido: clicar 7 vezes seguidas
-                if (center.clicks === 7) fade.target_text = "Para de clicar e vai codar. :)"
+                // Easter egg escondido: 6 cliques seguidos
+                if (center.clicks >= 6) { center.clicks = 0; fade.target_text = "Para de clicar e vai codar. :)"; eggHold.start() }
                 fade.restart()
             }
+            onClicked: hit()
+            onDoubleClicked: hit()   // cliques rápidos viram duplo clique no Qt: contam também
         }
+        Timer { id: eggHold; interval: 4000 }
         SequentialAnimation {
             id: fade
             property string target_text: ""
