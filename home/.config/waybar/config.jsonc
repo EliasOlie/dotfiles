@@ -8,7 +8,15 @@
 
   "modules-left":   ["custom/logo", "hyprland/workspaces", "hyprland/window"],
   "modules-center": ["clock"],
-  "modules-right":  ["tray", "custom/gpu", "cpu", "memory", "pulseaudio", "network", "bluetooth", "battery", "custom/notification"],
+  "modules-right":  ["tray", "custom/gpu", "cpu", "memory", "custom/nightlight", "pulseaudio", "network", "bluetooth", "battery", "custom/notification"],
+
+  "custom/nightlight": {
+    "exec": "~/.config/hypr/scripts/nightlight.sh waybar",
+    "return-type": "json",
+    "interval": 30,
+    "signal": 8,
+    "on-click": "~/.config/hypr/scripts/nightlight.sh toggle"
+  },
 
   "custom/logo": {
     "format": "●",

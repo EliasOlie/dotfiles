@@ -212,7 +212,7 @@ end
 bind(mainMod .. " + SHIFT + G", GameModeToggle, "game mode")
 
 -- Luz noturna (hyprsunset)
-bind(mainMod .. " + N", sh("pkill -x hyprsunset || hyprsunset -t 4500"), "luz noturna")
+bind(mainMod .. " + N", sh(scripts .. "/nightlight.sh toggle"), "luz noturna (liga/desliga; automática por horário)")
 
 -- ------------------------------------------------------------
 -- Sistema

@@ -40,6 +40,7 @@ hyprctl reload
 | `home/.config/hypr/keybinds.lua` | todos os atalhos |
 | `home/.config/hypr/look.lua` | visual: bordas, gaps, animações, autostart do visual |
 | `home/.config/hypr/hypr{paper,idle,lock}.conf` | wallpaper, inatividade, tela de bloqueio |
+| `home/.config/hypr/hyprsunset.conf` | luz noturna automática: 06:30 normal · 18:00 4800K · 21:30 4000K |
 | `home/.config/hypr/scripts/` | screenshot, volume/brilho (OSD), menu de energia, busca, Bitwarden |
 | `home/.config/waybar/` | barra do topo |
 | `home/.config/rofi/` | launcher e menus (tema `eliasolie.rasi`) |
@@ -78,7 +79,7 @@ hyprctl reload
 | `Super+Shift+P` | Bitwarden: digita login (no menu: `alt u` copia usuário, `alt p` senha, `alt t` TOTP) |
 | `Super+Alt+P` | Bitwarden: copia TOTP |
 | `Super+Shift+G` | game mode (sem animações, blur, sombras e gaps) |
-| `Super+N` | luz noturna |
+| `Super+N` | luz noturna: liga/desliga (ela já é automática por horário) |
 | `Super+Shift+N` | notificações |
 | `Ctrl+Alt+L` / `Ctrl+Alt+P` / `Ctrl+Alt+Del` | bloquear / menu de energia / sair do Hyprland |
 | `Super+Print` (+`Shift` área, +`Ctrl` 5 s), `Alt+Print`, `Super+Shift+S` | screenshots (salvos em `~/Imagens/Screenshots`) |
@@ -89,7 +90,7 @@ Workspaces por monitor: o monitor 1 (`eDP-1`) usa os IDs 1–10 e o monitor 2 (`
 
 Ficam sobre o wallpaper (camada de fundo, abaixo das janelas) e **só aparecem quando o workspace do monitor está vazio** — abriu uma janela, eles somem com um fade.
 
-- **Centro:** frase de dev do dia (clique troca; lista em `CenterPiece.qml`) e quick actions — projetos, senhas, print, luz noturna, não perturbe, game mode, bloquear. Os toggles ficam lima quando ligados.
+- **Topo-centro:** frase de dev do dia (clique troca; lista em `CenterPiece.qml`) e quick actions — projetos, senhas, print, luz noturna, não perturbe, game mode, bloquear. Os toggles ficam lima quando ligados.
 - **Relógio:** Archivo 62% / 800 e a data, no canto inferior esquerdo.
 - **Apps:** fixados (`pinned` em `DesktopWidgets.qml`) + os abertos. Clique foca ou abre; botão do meio abre outra janela.
 - **Mídia:** o player ativo (MPRIS: navegador, Spotify, mpv…); some quando nada está aberto.

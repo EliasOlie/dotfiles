@@ -9,22 +9,22 @@ Column {
 
     // ------------------------------------------------ frases
     readonly property var phrases: [
-        "funciona na minha máquina.",
-        "não é bug, é feature.",
-        "sexta-feira não se faz deploy.",
-        "git push --force e fé.",
-        "já tentou desligar e ligar de novo?",
-        "sempre é o DNS.",
-        "rm -rf node_modules resolve 80% da vida.",
+        "Funciona na minha máquina.",
+        "Não é bug, é feature.",
+        "Sexta-feira não se faz deploy.",
+        "Deploy na base do force push e fé.",
+        "Já tentou desligar e ligar de novo?",
+        "Sempre é o DNS.",
+        "Na dúvida, apaga a node_modules.",
         "TODO: refatorar (escrito em 2019).",
-        "produção é o melhor ambiente de testes.",
-        "café entra, código sai.",
-        "commit: \"ajustes\".",
-        "o código é autoexplicativo. (não é.)",
-        "99 bugs no código. corrigi um. 127 bugs no código.",
-        "se compilou, tá pronto.",
-        "a estimativa era 2 horas.",
-        "quem escreveu isso? ah. fui eu."
+        "Produção é o melhor ambiente de testes.",
+        "Café entra, código sai.",
+        "Mensagem do commit: \"ajustes\".",
+        "O código é autoexplicativo. (Não é.)",
+        "99 bugs no código. Corrigi um. 127 bugs no código.",
+        "Se compilou, tá pronto.",
+        "A estimativa era 2 horas.",
+        "Quem escreveu isso? Ah. Fui eu."
     ]
     // Uma por dia; clique avança
     property int idx: Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000) % phrases.length
@@ -58,6 +58,7 @@ Column {
 
     // ------------------------------------------------ quick actions
     property bool nightOn: false
+    property int nightTemp: 6000
     property bool dndOn: false
     property bool gameOn: false
     readonly property string scripts: Quickshell.env("HOME") + "/.config/hypr/scripts"
@@ -65,13 +66,23 @@ Column {
     // Estado dos toggles a cada 2 s
     Process {
         id: stateProc
-        command: ["sh", "-c", "pgrep -x hyprsunset >/dev/null && echo 1 || echo 0; swaync-client -D 2>/dev/null || echo false; hyprctl repl 'return tostring(GAMEMODE)' 2>/dev/null || echo false"]
+        // Cada valor sai rotulado (chave=valor) para não depender da ordem das linhas
+        command: ["sh", "-c",
+            "echo night=$($HOME/.config/hypr/scripts/nightlight.sh status);" +
+            "echo dnd=$(swaync-client -D 2>/dev/null);" +
+            "echo game=$(hyprctl repl 'return tostring(GAMEMODE)' 2>/dev/null | tr -d '[:space:]');" +
+            "echo temp=$(hyprctl hyprsunset temperature 2>/dev/null | grep -oE '[0-9]+' | head -1)"]
         stdout: StdioCollector {
             onStreamFinished: {
-                const l = this.text.trim().split("\n")
-                center.nightOn = l[0] === "1"
-                center.dndOn = (l[1] || "").trim() === "true"
-                center.gameOn = (l[2] || "").trim() === "true"
+                const v = {}
+                for (const line of this.text.split("\n")) {
+                    const i = line.indexOf("=")
+                    if (i > 0) v[line.slice(0, i)] = line.slice(i + 1).trim()
+                }
+                center.nightOn = v.night === "1"
+                center.dndOn = v.dnd === "true"
+                center.gameOn = v.game === "true"
+                center.nightTemp = parseInt(v.temp) || 6000
             }
         }
     }
@@ -88,7 +99,7 @@ Column {
                 { label: "projetos",     on: false,          cmd: [center.scripts + "/projects.sh"] },
                 { label: "senhas",       on: false,          cmd: [center.scripts + "/bitwarden.sh"] },
                 { label: "print",        on: false,          cmd: [center.scripts + "/screenshot.sh", "area"] },
-                { label: "luz noturna",  on: center.nightOn, cmd: ["sh", "-c", "pkill -x hyprsunset || hyprsunset -t 4500"] },
+                { label: center.nightOn ? "luz noturna " + center.nightTemp + "K" : "luz noturna", on: center.nightOn, cmd: [center.scripts + "/nightlight.sh", "toggle"] },
                 { label: "não perturbe", on: center.dndOn,   cmd: ["swaync-client", "-d", "-sw"] },
                 { label: "game mode",    on: center.gameOn,  cmd: ["hyprctl", "repl", "GameModeToggle()"] },
                 { label: "bloquear",     on: false,          cmd: ["sh", "-c", "pidof hyprlock || hyprlock"] }
