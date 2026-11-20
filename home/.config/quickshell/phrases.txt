@@ -1,0 +1,70 @@
+# Frases do desktop — uma por linha. Linhas com # e em branco são ignoradas.
+# O widget recarrega sozinho quando este arquivo é salvo.
+# Os easter eggs por data/hora ficam em CenterPiece.qml (função egg()).
+
+# ---- dev, engraçadas
+Funciona na minha máquina.
+Não é bug, é feature.
+Sexta-feira não se faz deploy.
+Deploy na base do force push e fé.
+Já tentou desligar e ligar de novo?
+Sempre é o DNS.
+Na dúvida, apaga a node_modules.
+TODO: refatorar (escrito em 2019).
+Produção é o melhor ambiente de testes.
+Café entra, código sai.
+Mensagem do commit: "ajustes".
+O código é autoexplicativo. (Não é.)
+99 bugs no código. Corrigi um. 127 bugs no código.
+Se compilou, tá pronto.
+A estimativa era 2 horas.
+Quem escreveu isso? Ah. Fui eu.
+Existem 10 tipos de pessoas: as que entendem binário e as que não.
+Nomear variáveis é o problema mais difícil da computação.
+É só uma alteração pequena. (Mexeu em 47 arquivos.)
+Os testes passaram. Desconfie.
+Documentação: a gente faz depois.
+O cliente pediu "só um botãozinho".
+Comentei o código. Agora tem um bug e um comentário.
+Stack Overflow fora do ar. Hoje é feriado.
+Não mexe que tá funcionando.
+O mais permanente dos códigos é o "temporário".
+Funcionou de primeira. Algo está muito errado.
+Ctrl+C, Ctrl+V e um pouco de fé.
+O problema está entre a cadeira e o teclado.
+Debugar é ser o detetive de um crime que você mesmo cometeu.
+Um console.log vale mais que mil breakpoints.
+Meu código não tem bugs, tem surpresas.
+Merge conflict é só o Git pedindo atenção.
+Hoje o legado é o código que você escreveu ontem.
+
+# ---- motivacionais (com um pé no chão)
+Feito é melhor que perfeito.
+Um commit pequeno por vez.
+Primeiro faça funcionar. Depois faça bonito. Depois faça rápido.
+Simples é difícil. Por isso vale a pena.
+Todo especialista já foi iniciante que não desistiu.
+O bug de hoje é a experiência de amanhã.
+Lê a mensagem de erro. Ela quer te ajudar.
+Pausa também é produtividade.
+Automatize o chato. Pense no difícil.
+Código bom é código que o próximo entende.
+Pequenas melhorias todos os dias.
+Errar rápido é aprender rápido.
+Quem entrega, aprende.
+Bebe água. Sério.
+Respira. É só um bug.
+
+# ---- referências e easter eggs
+Hello, world.
+sudo faça um sanduíche.
+A resposta é 42.
+Não entre em pânico.
+There is no place like 127.0.0.1
+Aqui não tem bug. Só recursos não documentados.
+:wq
+Tente sair do Vim. Eu espero.
+O bolo é uma mentira.
+Siga o coelho branco.
+Isso é tudo, pessoal.
+Tchau, e obrigado pelos peixes.

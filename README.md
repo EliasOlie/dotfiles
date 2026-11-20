@@ -90,7 +90,7 @@ Workspaces por monitor: o monitor 1 (`eDP-1`) usa os IDs 1–10 e o monitor 2 (`
 
 Ficam sobre o wallpaper (camada de fundo, abaixo das janelas) e **só aparecem quando o workspace do monitor está vazio** — abriu uma janela, eles somem com um fade.
 
-- **Topo-centro:** frase de dev do dia (clique troca; lista em `CenterPiece.qml`) e quick actions — projetos, senhas, print, luz noturna, não perturbe, game mode, bloquear. Os toggles ficam lima quando ligados.
+- **Topo-centro:** frase que troca a cada 10 min em ordem embaralhada (clique troca na hora). As frases ficam em `quickshell/phrases.txt`, uma por linha, e o widget recarrega ao salvar. Easter eggs por data/hora (madrugada, sexta à tarde, 13:37, Natal, dia do π…) ficam em `egg()` no `CenterPiece.qml` — e tem um escondido para quem clicar demais e quick actions — projetos, senhas, print, luz noturna, não perturbe, game mode, bloquear. Os toggles ficam lima quando ligados.
 - **Relógio:** Archivo 62% / 800 e a data, no canto inferior esquerdo.
 - **Apps:** fixados (`pinned` em `DesktopWidgets.qml`) + os abertos. Clique foca ou abre; botão do meio abre outra janela.
 - **Mídia:** o player ativo (MPRIS: navegador, Spotify, mpv…); some quando nada está aberto.
