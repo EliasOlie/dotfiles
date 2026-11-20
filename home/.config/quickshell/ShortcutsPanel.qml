@@ -133,7 +133,7 @@ Rectangle {
             width: parent.width
             elide: Text.ElideRight
             text: panel.hoveredItem ? "ABRIR " + panel.hoveredItem.name.toUpperCase() + "  ↗" : "PASSE O MOUSE"
-            color: panel.hoveredItem ? Theme.signal : Theme.line
+            color: panel.hoveredItem ? Theme.signal : Qt.alpha(Theme.statik, 0.6)
             font.family: Theme.mono; font.pixelSize: 11; font.letterSpacing: 1.2
             Behavior on color { ColorAnimation { duration: 120 } }
         }

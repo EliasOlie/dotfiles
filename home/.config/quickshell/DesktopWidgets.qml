@@ -85,9 +85,11 @@ PanelWindow {
             //   [{ "title": "...", "start": "ISO-8601", "end": "ISO-8601", "where": "..." }]
             Card {
                 id: agenda
-                title: "AGENDA"
+                label: "AGENDA"
+                title: "PRÓXIMOS EVENTOS"
+                glyph: "\u{f00ed}"
                 Layout.fillWidth: true
-                Layout.preferredHeight: 34 + Math.max(1, events.length) * 24
+                Layout.preferredHeight: headerHeight + pad * 2 + Math.max(1, events.length) * 24
 
                 property var events: []
                 property bool hasFile: false
@@ -138,7 +140,7 @@ PanelWindow {
                     Text {
                         visible: agenda.events.length === 0
                         text: agenda.hasFile ? "nada pela frente" : "em breve"
-                        color: Theme.line; font.family: Theme.mono; font.pixelSize: 12
+                        color: Qt.alpha(Theme.statik, 0.6); font.family: Theme.mono; font.pixelSize: 12
                     }
                 }
             }
@@ -146,9 +148,11 @@ PanelWindow {
             // ---------- MÍDIA (só aparece se algo estiver tocando/pausado)
             Card {
                 id: media
-                title: "MÍDIA"
+                label: "MÍDIA"
+                title: "TOCANDO AGORA"
+                glyph: "\u{f075a}"
                 Layout.fillWidth: true
-                Layout.preferredHeight: 92
+                Layout.preferredHeight: headerHeight + pad * 2 + 70
                 visible: player !== null
 
                 readonly property var players: Mpris.players.values
@@ -204,9 +208,11 @@ PanelWindow {
 
             // ---------- SISTEMA (clique abre o htop)
             Card {
-                title: "SISTEMA"
+                label: "SISTEMA"
+                title: "RECURSOS"
+                glyph: "\u{f035b}"
                 Layout.fillWidth: true
-                Layout.preferredHeight: 96
+                Layout.preferredHeight: headerHeight + pad * 2 + 70
 
                 Grid {
                     anchors.fill: parent
