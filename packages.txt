@@ -44,3 +44,11 @@ fastfetch
 rbw
 rofi-rbw
 pinentry
+
+# Shell
+zsh
+eza
+bat
+zoxide
+fzf
+git

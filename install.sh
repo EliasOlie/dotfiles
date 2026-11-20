@@ -26,6 +26,16 @@ if (( want_pkgs )); then
   grep -vE '^\s*(#|$)' packages.txt | xargs sudo pacman -S --needed --noconfirm
 fi
 
+echo "==> oh-my-zsh + plugins"
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+  git clone --depth=1 https://github.com/ohmyzsh/ohmyzsh.git "$HOME/.oh-my-zsh"
+fi
+ZC="$HOME/.oh-my-zsh/custom/plugins"
+for p in zsh-users/zsh-autosuggestions zsh-users/zsh-completions zsh-users/zsh-syntax-highlighting; do
+  [ -d "$ZC/${p#*/}" ] || git clone --depth=1 "https://github.com/$p" "$ZC/${p#*/}"
+done
+[ -f "$HOME/.zshrc.local" ] || { umask 077; echo "# Segredos e ajustes desta máquina (fora do git)" > "$HOME/.zshrc.local"; }
+
 echo "==> Links em \$HOME"
 while IFS= read -r -d '' src; do
   rel="${src#"$REPO/home/"}"

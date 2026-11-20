@@ -27,7 +27,8 @@ hyprctl reload
 
 - `./install.sh` sozinho só cria os links (faz backup `*.bak-DATA` do que já existir).
 - Os arquivos em `home/` viram links no `$HOME`: editar `~/.config/hypr/look.lua` já edita o repositório.
-- O `.zshrc` **não** está aqui (tem segredos). Para o tema do prompt, use `ZSH_THEME="eliasolie"` com oh-my-zsh.
+- O `.zshrc` está aqui **sem segredos**: senhas e configs da máquina ficam em `~/.zshrc.local` (fora do git, `chmod 600`), que o `.zshrc` carrega no fim. O instalador cria esse arquivo vazio se não existir.
+- O instalador também baixa o oh-my-zsh e os plugins (`zsh-autosuggestions`, `zsh-completions`, `zsh-syntax-highlighting`) se faltarem.
 - Bitwarden: depois de instalar, configure o seu servidor:
   `rbw config set base_url https://SEU-VAULTWARDEN && rbw config set email SEU@EMAIL && rbw login`
 
@@ -45,6 +46,7 @@ hyprctl reload
 | `home/.config/swaync/` | notificações e central de controle |
 | `home/.config/kitty/` | terminal (tema `eliasolie.conf`) |
 | `home/.config/gtk-*`, `qt6ct/`, `kdeglobals`, `color-schemes/` | apps GTK, Qt e KDE na paleta |
+| `home/.zshrc` | zsh (oh-my-zsh, aliases com eza/bat, zoxide, fzf, ssh-agent) |
 | `home/.oh-my-zsh/custom/themes/eliasolie.zsh-theme` | prompt do zsh |
 | `home/.config/rofi-rbw.rc` | Bitwarden no rofi |
 | `system/sddm/eliasolie/` | tema da tela de login (SDDM, Qt6) |
