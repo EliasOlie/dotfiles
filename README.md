@@ -80,6 +80,7 @@ hyprctl reload
 | `Super+S` / `Super+Ctrl+S` | busca na web / alternar janelas |
 | `Super+Shift+O` | abrir projeto (repositórios git em `~/work`) num terminal |
 | `Super+Alt+D` | desktop compacto no monitor atual: esconde atalhos e painéis (etiquetas `+ ⌄` abrem ao passar o mouse); fica salvo |
+| `Super+A` | agenda grande no centro do desktop (monitor atual; fica salvo). Com janelas na frente, vai pro desktop |
 | `Super+H` | cola de atalhos: lista todos os keybinds e o que fazem (lê do Hyprland, sempre atualizada) |
 | `Super+J` | buscar no Janus (rofi) |
 | `Super+Alt+F` | modo foco: 25 min com "não perturbe" (de novo encerra) |
@@ -120,6 +121,9 @@ Os widgets ficam sobre o wallpaper (abaixo das janelas) e **só aparecem quando 
 - **Entrada em cascata:** na primeira vez que o desktop aparece (login ou reinício do Quickshell), o relógio voa da barra e os blocos entram um a um.
 - **Wallpaper que reage:** clique no fundo do desktop solta uma onda pelos pontos; com música tocando (MPRIS) e o desktop à mostra, os pontos pulsam em lima no ritmo dos graves (`hypr/scripts/audio-level.py`, via `parec`, sem cava).
 - **Indicador de volume/brilho/microfone:** card no estilo do site que sobe do rodapé, só no monitor com foco (`quickshell/Osd.qml`; `qs ipc call osd popup volume 45 false`). O `osd.sh` cai numa notificação se o Quickshell não estiver rodando.
+- **Agenda** (`quickshell/AgendaCard.qml`, dados em `~/.local/share/eliasolie/agenda.json` pelo timer `agenda-sync` do projeto agenda): calendário do mês com marcação por marca e próximos eventos. `Super+A` abre a versão grande e centralizada (calendário + 7 eventos) por monitor. Também aparece na tela de bloqueio (`lock-status.sh agenda`).
+- **Lembretes da agenda** (`quickshell/AgendaNotify.qml`): notificação 1 h e 10 min antes; dia inteiro às 8h. Cada aviso sai uma vez (`~/.local/state/eliasolie/agenda-notified.json`).
+- **Workspaces vai-e-volta:** `Super+N` no workspace em que você já está volta para o anterior daquele monitor.
 - **Frase do dia:** discreta no canto superior direito (`quickshell/Phrase.qml`); clique troca, 6 cliques rápidos = easter egg.
 
 ## Integrações

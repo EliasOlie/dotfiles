@@ -33,4 +33,32 @@ status)
     out+="<span foreground='$LINE'>   |   </span><span foreground='$c'>■</span>  BACKUP $age"
     echo "<span foreground='$STATIC'>$out</span>"
     ;;
+agenda)
+    # Próximos eventos de ~/.local/share/eliasolie/agenda.json (mesmo arquivo do desktop)
+    python3 - <<'PY'
+import json, os, datetime as dt
+try: ev = json.load(open(os.path.expanduser("~/.local/share/eliasolie/agenda.json")))
+except Exception: raise SystemExit
+now = dt.datetime.now().astimezone()
+def parse(s):
+    d = dt.datetime.fromisoformat(s)
+    return d if d.tzinfo else d.astimezone()      # dia inteiro vem sem fuso: hora local
+COR = {"eliasolie": "#C8F031", "conectame": "#6EEB62", "pessoal": "#7AA7FF"}
+DIAS = ["SEG", "TER", "QUA", "QUI", "SEX", "SÁB", "DOM"]
+esc = lambda t: t.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+items = sorted(((parse(e["start"]), parse(e.get("end") or e["start"]), e) for e in ev), key=lambda x: x[0])
+items = [x for x in items if x[1] >= now][:4]
+if not items: raise SystemExit
+out = ["<span foreground='#8A8A84' letter_spacing='3000'>PRÓXIMOS</span>", ""]
+for s, e, it in items:
+    d = s.date() - now.date()
+    day = "HOJE" if d.days == 0 else "AMANHÃ" if d.days == 1 else f"{DIAS[s.weekday()]} {s:%d/%m}"
+    when = f"{day} · DIA TODO" if it.get("allDay") else f"{day} · {s:%H:%M}"
+    c = COR.get(it.get("brand") or "", "#8A8A84")
+    out.append(f"<span foreground='{c}'>■</span>  <span foreground='#8A8A84'>{when}</span>")
+    out.append(f"   <span foreground='#EDEDE8'>{esc(it['title'][:42])}</span>")
+    out.append("")
+print("\n".join(out).rstrip())
+PY
+    ;;
 esac

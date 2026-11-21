@@ -105,12 +105,31 @@ local function current_monitor()
     return m and m.name or MONITORS[1]
 end
 
+-- Vai-e-volta: apertar o número do workspace em que você já está volta para o
+-- anterior daquele monitor (1 -> 2, Super+2 de novo -> 1). O "anterior" é
+-- registrado em toda troca de workspace (atalho, clique na waybar, Super+D...).
+WS_CUR, WS_PREV = WS_CUR or {}, WS_PREV or {}   -- globais: dá para inspecionar com hyprctl repl
+hl.on("workspace.active", function()
+    local m = hl.get_active_monitor()
+    if not m or not m.active_workspace then return end
+    local id = m.active_workspace.id
+    if WS_CUR[m.name] ~= id then
+        WS_PREV[m.name] = WS_CUR[m.name]
+        WS_CUR[m.name] = id
+    end
+end)
+
 for n = 1, 10 do
     local code = "code:" .. (9 + n)
 
     bind(mainMod .. " + " .. code, function()
-        hl.dispatch(hl.dsp.focus({ workspace = ws_id(n, current_monitor()), on_current_monitor = true }))
-    end, "workspace " .. n .. " (monitor atual)")
+        local m = hl.get_active_monitor()
+        local name = m and m.name or MONITORS[1]
+        local target = ws_id(n, name)
+        local cur = m and m.active_workspace and m.active_workspace.id
+        if cur == target and WS_PREV[name] then target = WS_PREV[name] end
+        hl.dispatch(hl.dsp.focus({ workspace = target, on_current_monitor = true }))
+    end, "workspace " .. n .. " (monitor atual; de novo = volta ao anterior)")
 
     bind(mainMod .. " + CTRL + " .. code, function()
         local origin = current_monitor()
@@ -223,6 +242,7 @@ bind(mainMod .. " + CTRL + S", sh("pkill rofi || rofi -show window"),           
 
 bind(mainMod .. " + SHIFT + O", sh(scripts .. "/projects.sh"), "abrir projeto (~/work)")
 bind(mainMod .. " + ALT + D",   sh("qs ipc call desktop toggleCompact"), "desktop compacto (monitor atual)")
+bind(mainMod .. " + A",         sh("qs ipc call desktop toggleAgenda"), "agenda grande no centro (monitor atual)")
 bind(mainMod .. " + H",         sh(scripts .. "/keybinds.py"),    "mostrar todos os atalhos")
 bind(mainMod .. " + J",         sh(scripts .. "/janus.py"),       "buscar no Janus")
 bind(mainMod .. " + ALT + F",   sh(scripts .. "/focus.sh toggle"), "modo foco (25 min, não perturbe)")

@@ -20,4 +20,6 @@ ShellRoot {
     }
     // Garante que a ponte IPC do indicador exista desde o início
     property var _osd: OsdBus
+    // Lembretes da agenda (1 h e 10 min antes; dia inteiro às 8h)
+    property var _agendaNotify: AgendaNotify
 }

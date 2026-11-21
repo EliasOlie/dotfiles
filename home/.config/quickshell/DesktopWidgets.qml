@@ -30,6 +30,7 @@ PanelWindow {
     // O alfinete (canto do bloco aberto) fixa o bloco aberto.
     readonly property string mon: modelData.name
     readonly property bool compact: DeskState.isCompact(mon) || DeskState.focus
+    readonly property bool bigAgenda: DeskState.agendaOpen(mon)
     readonly property bool pinLeft: DeskState.pinned(mon, "left")
     readonly property bool pinRight: DeskState.pinned(mon, "right")
     property bool peekLeft: false
@@ -288,6 +289,19 @@ PanelWindow {
             }
         }
 
+        // =============================================== CENTRO: agenda grande (Super+A, por monitor)
+        AgendaCard {
+            big: true
+            anchors.centerIn: parent
+            width: Math.min(1040, parent.width - 2 * desk.edge - 520)
+            height: implicitHeight
+            opacity: desk.bigAgenda ? desk.stage(3) : 0
+            visible: opacity > 0.01
+            scale: desk.bigAgenda ? 1 : 0.96
+            Behavior on opacity { NumberAnimation { duration: 220; easing.type: Easing.OutCubic } }
+            Behavior on scale { NumberAnimation { duration: 260; easing.type: Easing.OutCubic } }
+        }
+
         // =============================================== DIREITA: agenda, mídia, sistema
         Badge {
             anchors { right: parent.right; bottom: parent.bottom; rightMargin: desk.edge; bottomMargin: desk.edge }
@@ -311,69 +325,11 @@ PanelWindow {
             transform: Translate { y: (desk.showRight ? 0 : 6) + (desk.intro >= 6 ? 0 : 14); Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
             HoverHandler { id: rightHover; onHoveredChanged: if (desk.compact) hovered ? closeRight.stop() : closeRight.restart() }
 
-            // ---------- AGENDA
-            // Contrato: ~/.local/share/eliasolie/agenda.json
-            //   [{ "title": "...", "start": "ISO-8601", "end": "ISO-8601", "where": "..." }]
-            Card {
-                id: agenda
-                label: "AGENDA"
-                title: "PRÓXIMOS EVENTOS"
-                glyph: "\u{f00ed}"
+            // ---------- AGENDA (calendário + próximos eventos; ver AgendaCard.qml)
+            AgendaCard {
+                visible: !desk.bigAgenda             // com a agenda grande aberta, a pequena sai
                 Layout.fillWidth: true
-                Layout.preferredHeight: headerHeight + pad * 2 + Math.max(1, events.length) * 24
-
-                property var events: []
-                property bool hasFile: false
-
-                FileView {
-                    id: agendaFile
-                    path: Quickshell.env("HOME") + "/.local/share/eliasolie/agenda.json"
-                    watchChanges: true
-                    printErrors: false
-                    onFileChanged: reload()
-                    onLoaded: {
-                        agenda.hasFile = true
-                        try {
-                            const now = new Date()
-                            agenda.events = JSON.parse(text())
-                                .map(e => Object.assign({}, e, { _s: new Date(e.start), _e: new Date(e.end || e.start) }))
-                                .filter(e => e._e >= now)
-                                .sort((a, b) => a._s - b._s)
-                                .slice(0, 4)
-                        } catch (err) { agenda.events = [] }
-                    }
-                    onLoadFailed: agenda.hasFile = false
-                }
-                Timer { interval: 60000; running: true; repeat: true; onTriggered: agendaFile.reload() }
-
-                Column {
-                    anchors.fill: parent
-                    spacing: 6
-                    Repeater {
-                        model: agenda.events
-                        delegate: Row {
-                            required property var modelData
-                            readonly property bool today: modelData._s.toDateString() === new Date().toDateString()
-                            width: parent.width
-                            spacing: 12
-                            Text {
-                                width: 48
-                                text: today ? Qt.formatTime(modelData._s, "HH:mm") : Qt.formatDate(modelData._s, "dd/MM")
-                                color: Theme.signal; font.family: Theme.mono; font.pixelSize: 12
-                            }
-                            Text {
-                                width: parent.width - 60; elide: Text.ElideRight
-                                text: modelData.title + (modelData.where ? "  · " + modelData.where : "")
-                                color: Theme.bone; font.family: Theme.mono; font.pixelSize: 12
-                            }
-                        }
-                    }
-                    Text {
-                        visible: agenda.events.length === 0
-                        text: agenda.hasFile ? "nada pela frente" : "em breve"
-                        color: Qt.alpha(Theme.statik, 0.6); font.family: Theme.mono; font.pixelSize: 12
-                    }
-                }
+                Layout.preferredHeight: implicitHeight
             }
 
             // ---------- MÍDIA (só aparece se algo estiver tocando/pausado)
