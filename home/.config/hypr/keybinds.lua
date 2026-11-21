@@ -298,3 +298,8 @@ bind("XF86AudioPause", sh("playerctl play-pause"), "play/pause",  media)
 bind("XF86AudioNext",  sh("playerctl next"),       "próxima",     media)
 bind("XF86AudioPrev",  sh("playerctl previous"),   "anterior",    media)
 bind("XF86AudioStop",  sh("playerctl stop"),       "parar",       media)
+
+-- Monitor saiu/voltou: resgata as janelas do bloco dele e devolve depois
+-- (sem isso, tirar o monitor externo deixava janelas nos workspaces 11..20 inalcançáveis)
+hl.on("monitor.removed", function() hl.exec_cmd(scripts .. "/monitors.sh removed") end)
+hl.on("monitor.added",   function() hl.exec_cmd(scripts .. "/monitors.sh added") end)
