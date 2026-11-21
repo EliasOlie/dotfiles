@@ -28,7 +28,32 @@ bind(mainMod .. " + E",      sh(files),                  "gerenciador de arquivo
 bind(mainMod .. " + B",      sh('xdg-open "https://"'),  "navegador padrão")
 
 bind(mainMod .. " + SHIFT + F", hl.dsp.window.fullscreen({ mode = "fullscreen" }), "tela cheia")
-bind(mainMod .. " + CTRL + F",  hl.dsp.window.fullscreen({ mode = "maximized" }),  "maximizar")
+-- Maximizar: janela lado a lado usa o "maximizado" do Hyprland; janela FLUTUANTE
+-- (ex.: WhatsApp) cresce até preencher o monitor atual (respeitando a waybar) e
+-- volta ao tamanho anterior no segundo toque. Não manda "tela cheia" pro app
+-- (o Chromium tratava o maximizado de flutuante como F11) e não troca de monitor.
+FLOAT_MAX = FLOAT_MAX or {}
+function MaximizeToggle()
+    local w = hl.get_active_window()
+    if not w then return end
+    if not w.floating then
+        hl.dispatch(hl.dsp.window.fullscreen({ mode = "maximized" }))
+        return
+    end
+    local m = hl.get_active_monitor()
+    local key = tostring(w.address)
+    if FLOAT_MAX[key] then
+        local s = FLOAT_MAX[key]; FLOAT_MAX[key] = nil
+        hl.dispatch(hl.dsp.window.resize({ x = s.x, y = s.y, relative = false }))
+    else
+        FLOAT_MAX[key] = { x = w.size.x, y = w.size.y }
+        local r, gap = m.reserved, 7
+        hl.dispatch(hl.dsp.window.resize({ x = m.width - r.left - r.right - 2 * gap,
+                                           y = m.height - r.top - r.bottom - 2 * gap, relative = false }))
+    end
+    hl.dispatch(hl.dsp.window.center())
+end
+bind(mainMod .. " + CTRL + F", MaximizeToggle, "maximizar (flutuante: preenche o monitor; de novo volta)")
 bind(mainMod .. " + V",         hl.dsp.window.float({ action = "toggle" }),         "flutuar janela")
 
 -- Flutuar todas as janelas do workspace atual

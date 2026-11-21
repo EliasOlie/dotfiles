@@ -61,7 +61,14 @@ toggle)
         [[ -z $(pid_of "$id") ]] && launch "$id"
         for _ in $(seq 80); do sleep 0.25; [[ $(count "$id" "$(clients)") != -1 ]] && break; done
     fi
-    hyprctl dispatch "hl.dsp.workspace.toggle_special(\"wa-$id\")" >/dev/null ;;
+    hyprctl dispatch "hl.dsp.workspace.toggle_special(\"wa-$id\")" >/dev/null
+    # Mostrou? Foco na janela e centraliza no monitor atual (ela pode ter nascido
+    # no outro monitor; sem o foco, atalhos como maximizar agiriam em outra janela)
+    if hyprctl monitors -j | jq -e --arg s "special:wa-$id" '.[] | select(.focused) | .specialWorkspace.name == $s' >/dev/null; then
+        addr=$(jq -r --arg c "$(cls "$id")" '[.[] | select(.class == $c)][0].address' <<<"$(clients)")
+        hyprctl dispatch "hl.dsp.focus({ window = \"address:$addr\" })" >/dev/null
+        hyprctl dispatch "hl.dsp.window.center()" >/dev/null
+    fi ;;
 stop)
     p=$(pid_of "${2:?conta}"); [[ -n $p ]] && kill "$p" ;;
 status)
