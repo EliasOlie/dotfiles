@@ -117,6 +117,9 @@ Os widgets ficam sobre o wallpaper (abaixo das janelas) e **só aparecem quando 
 - **Alfinete:** com um bloco aberto (atalhos, painéis da direita ou quick actions) aparece um alfinete no canto; clicou, o bloco fica fixo aberto (lima). Salvo por monitor junto do modo compacto.
 - **Modo foco compacta o desktop** em todos os monitores enquanto conta (`qs ipc call desktop setFocus true|false`).
 - **Relógio que voa:** o relógio da waybar (`custom/clock`, `hypr/scripts/bar-clock.py`) some quando o desktop do monitor está à mostra; o relógio grande sai do centro da barra crescendo até o canto e, ao abrir uma janela, encolhe de volta para a barra.
+- **Entrada em cascata:** na primeira vez que o desktop aparece (login ou reinício do Quickshell), o relógio voa da barra e os blocos entram um a um.
+- **Wallpaper que reage:** clique no fundo do desktop solta uma onda pelos pontos; com música tocando (MPRIS) e o desktop à mostra, os pontos pulsam em lima no ritmo dos graves (`hypr/scripts/audio-level.py`, via `parec`, sem cava).
+- **Indicador de volume/brilho/microfone:** card no estilo do site que sobe do rodapé, só no monitor com foco (`quickshell/Osd.qml`; `qs ipc call osd popup volume 45 false`). O `osd.sh` cai numa notificação se o Quickshell não estiver rodando.
 - **Frase do dia:** discreta no canto superior direito (`quickshell/Phrase.qml`); clique troca, 6 cliques rápidos = easter egg.
 
 ## Integrações

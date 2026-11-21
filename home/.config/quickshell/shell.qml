@@ -13,4 +13,11 @@ ShellRoot {
         model: Quickshell.screens
         DesktopWidgets {}
     }
+    // Indicador de volume/brilho (por cima de tudo, só no monitor com foco)
+    Variants {
+        model: Quickshell.screens
+        Osd {}
+    }
+    // Garante que a ponte IPC do indicador exista desde o início
+    property var _osd: OsdBus
 }

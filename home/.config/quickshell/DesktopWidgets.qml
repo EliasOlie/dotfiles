@@ -20,7 +20,9 @@ PanelWindow {
     WlrLayershell.namespace: "eliasolie-desktop"
 
     readonly property var hmon: Hyprland.monitorFor(modelData)
-    readonly property bool empty: !hmon || !hmon.activeWorkspace || hmon.activeWorkspace.toplevels.values.length === 0
+    // Vazio = workspace ativo sem janelas (sem dados do Hyprland ainda, não conta como vazio:
+    // senão a entrada em cascata rodaria escondida no instante em que o qs inicia)
+    readonly property bool empty: !!hmon && !!hmon.activeWorkspace && hmon.activeWorkspace.toplevels.values.length === 0
     readonly property int edge: 56
 
     // Modo compacto (Super+Alt+D, por monitor; o modo foco compacta todos): esconde atalhos e
@@ -43,7 +45,31 @@ PanelWindow {
     // Entrando no desktop: o relógio sai do centro da waybar e cresce até o canto;
     // saindo: encolhe e volta para a barra (por cima das janelas, numa camada Overlay).
     property bool flying: false
-    onEmptyChanged: flight.fly(empty)
+    onEmptyChanged: {
+        if (!settled) return                       // dados do Hyprland ainda chegando
+        if (empty && !introDone) startIntro()
+        else flight.fly(empty)
+    }
+
+    // ------------------------------------------------ entrada em cascata (login)
+    // Na primeira vez que o desktop aparece: o relógio voa da barra e os blocos
+    // entram um por um (atalhos, quick actions, frase, data, status, painéis).
+    // Espera ~1 s ao iniciar: logo no começo o Hyprland ainda não listou as janelas
+    // e todo workspace parece vazio (a cascata rodaria escondida).
+    property int intro: 0
+    property bool introDone: false
+    property bool settled: false
+    function stage(n) { return desk.intro >= n ? 1 : 0 }
+    function startIntro() { desk.intro = 0; flight.fly(true); desk.intro = 1; introTick.start() }
+    Timer {
+        id: introTick; interval: 110; repeat: true
+        onTriggered: { desk.intro++; if (desk.intro >= 6) { stop(); desk.introDone = true } }
+    }
+    Timer {
+        interval: 1000; running: true
+        onTriggered: { desk.settled = true; if (desk.empty) desk.startIntro() }
+    }
+
     PanelWindow {
         id: flight
         screen: desk.modelData
@@ -101,17 +127,29 @@ PanelWindow {
             onPointChanged: { Pointer.screen = desk.modelData.name; Pointer.x = point.position.x; Pointer.y = point.position.y }
             onHoveredChanged: { Pointer.screen = desk.modelData.name; Pointer.inside = hovered }
         }
+        // Clique no fundo do desktop: onda nos pontos do wallpaper
+        MouseArea {
+            anchors.fill: parent
+            z: -1
+            onClicked: mouse => Pointer.ripple(desk.mon, mouse.x, mouse.y)
+        }
 
         // =============================================== TOPO-CENTRO: quick actions
         CenterPiece {
             monitor: desk.mon
             anchors { top: parent.top; horizontalCenter: parent.horizontalCenter; topMargin: desk.edge }
             visible: content.visible
+            opacity: desk.stage(2)
+            Behavior on opacity { NumberAnimation { duration: 260; easing.type: Easing.OutCubic } }
+            transform: Translate { y: desk.intro >= 2 ? 0 : 12; Behavior on y { NumberAnimation { duration: 320; easing.type: Easing.OutCubic } } }
         }
 
         // =============================================== TOPO-DIREITO: frase do dia (discreta)
         Phrase {
             anchors { right: parent.right; top: parent.top; rightMargin: desk.edge; topMargin: desk.edge + 6 }
+            opacity: desk.stage(3)
+            Behavior on opacity { NumberAnimation { duration: 260; easing.type: Easing.OutCubic } }
+            transform: Translate { y: desk.intro >= 3 ? 0 : 12; Behavior on y { NumberAnimation { duration: 320; easing.type: Easing.OutCubic } } }
         }
 
         // =============================================== TOPO-ESQUERDO: atalhos
@@ -120,7 +158,7 @@ PanelWindow {
             anchors { left: parent.left; top: parent.top; leftMargin: desk.edge; topMargin: desk.edge }
             text: "atalhos"
             label.text: "+  ATALHOS  \uf078"
-            opacity: desk.compact ? 1 : 0          // fica por baixo do bloco aberto
+            opacity: (desk.compact ? 1 : 0) * desk.stage(1)    // fica por baixo do bloco aberto
             visible: opacity > 0
             Behavior on opacity { NumberAnimation { duration: 140 } }
             onHoveredChanged: hovered ? (desk.peekLeft = true, closeLeft.stop()) : closeLeft.restart()
@@ -128,10 +166,10 @@ PanelWindow {
         }
         ShortcutsPanel {
             anchors { left: parent.left; top: parent.top; leftMargin: desk.edge; topMargin: desk.edge }
-            opacity: desk.showLeft ? 1 : 0
+            opacity: (desk.showLeft ? 1 : 0) * desk.stage(1)
             visible: opacity > 0
             Behavior on opacity { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } }
-            transform: Translate { y: desk.showLeft ? 0 : -6; Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
+            transform: Translate { y: (desk.showLeft ? 0 : -6) + (desk.intro >= 1 ? 0 : 14); Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
             HoverHandler { id: leftHover; onHoveredChanged: if (desk.compact) hovered ? closeLeft.stop() : closeLeft.restart() }
             Pin {
                 id: leftPin
@@ -162,6 +200,9 @@ PanelWindow {
             }
             Row {
                 spacing: 12
+                opacity: desk.stage(4)
+                Behavior on opacity { NumberAnimation { duration: 260; easing.type: Easing.OutCubic } }
+                transform: Translate { y: desk.intro >= 4 ? 0 : 10; Behavior on y { NumberAnimation { duration: 320; easing.type: Easing.OutCubic } } }
                 Rectangle { width: 8; height: 8; color: Theme.signal; anchors.verticalCenter: parent.verticalCenter }
                 Text {
                     text: Qt.locale("pt_BR").toString(sysClock.date, "dddd, d 'de' MMMM").toUpperCase()
@@ -192,6 +233,9 @@ PanelWindow {
         Item {
             anchors { horizontalCenter: parent.horizontalCenter; bottom: parent.bottom; bottomMargin: desk.edge - 20 }
             width: vpsRow.implicitWidth; height: vpsRow.implicitHeight
+            opacity: desk.stage(5)
+            Behavior on opacity { NumberAnimation { duration: 260; easing.type: Easing.OutCubic } }
+            transform: Translate { y: desk.intro >= 5 ? 0 : 10; Behavior on y { NumberAnimation { duration: 320; easing.type: Easing.OutCubic } } }
         Row {
             id: vpsRow
             spacing: 12
@@ -250,7 +294,7 @@ PanelWindow {
             id: rightTag
             text: "painéis"
             label.text: "+  AGENDA · MÍDIA · RECURSOS  \uf077"
-            opacity: desk.compact ? 1 : 0
+            opacity: (desk.compact ? 1 : 0) * desk.stage(6)
             visible: opacity > 0
             Behavior on opacity { NumberAnimation { duration: 140 } }
             onHoveredChanged: hovered ? (desk.peekRight = true, closeRight.stop()) : closeRight.restart()
@@ -261,10 +305,10 @@ PanelWindow {
             anchors { right: parent.right; bottom: parent.bottom; rightMargin: desk.edge; bottomMargin: desk.edge }
             width: 380
             spacing: 10
-            opacity: desk.showRight ? 1 : 0
+            opacity: (desk.showRight ? 1 : 0) * desk.stage(6)
             visible: opacity > 0
             Behavior on opacity { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } }
-            transform: Translate { y: desk.showRight ? 0 : 6; Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
+            transform: Translate { y: (desk.showRight ? 0 : 6) + (desk.intro >= 6 ? 0 : 14); Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
             HoverHandler { id: rightHover; onHoveredChanged: if (desk.compact) hovered ? closeRight.stop() : closeRight.restart() }
 
             // ---------- AGENDA
