@@ -222,6 +222,8 @@ bind(mainMod .. " + S",        sh(scripts .. "/websearch.sh"),                  
 bind(mainMod .. " + CTRL + S", sh("pkill rofi || rofi -show window"),                     "alternar janelas")
 
 bind(mainMod .. " + SHIFT + O", sh(scripts .. "/projects.sh"), "abrir projeto (~/work)")
+bind(mainMod .. " + J",         sh(scripts .. "/janus.py"),       "buscar no Janus")
+bind(mainMod .. " + ALT + F",   sh(scripts .. "/focus.sh toggle"), "modo foco (25 min, não perturbe)")
 
 -- Bitwarden (Vaultwarden auto-hospedado) via rbw + rofi-rbw
 bind(mainMod .. " + SHIFT + P", sh(scripts .. "/bitwarden.sh"),      "bitwarden: digitar login/senha")
