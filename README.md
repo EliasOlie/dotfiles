@@ -79,6 +79,7 @@ hyprctl reload
 | `Super+Alt+V` / `E` / `C` | clipboard / emoji / calculadora |
 | `Super+S` / `Super+Ctrl+S` | busca na web / alternar janelas |
 | `Super+Shift+O` | abrir projeto (repositórios git em `~/work`) num terminal |
+| `Super+H` | cola de atalhos: lista todos os keybinds e o que fazem (lê do Hyprland, sempre atualizada) |
 | `Super+J` | buscar no Janus (rofi) |
 | `Super+Alt+F` | modo foco: 25 min com "não perturbe" (de novo encerra) |
 | `Super+Shift+P` | Bitwarden: digita login (no menu: `alt u` copia usuário, `alt p` senha, `alt t` TOTP) |
