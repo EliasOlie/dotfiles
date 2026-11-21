@@ -45,7 +45,7 @@ tooltip {
 
 #window { color: #8A8A84; }
 
-#clock {
+#clock, #custom-clock {
   color: #EDEDE8;
   font-family: "Archivo", sans-serif;
   font-size: 12px;

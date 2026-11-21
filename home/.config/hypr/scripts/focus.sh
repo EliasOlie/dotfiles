@@ -12,6 +12,7 @@ UNIT=eliasolie-focus
 DEFAULT=25
 
 refresh() { pkill -RTMIN+9 waybar 2>/dev/null; }
+desk() { qs ipc call desktop setFocus "$1" >/dev/null 2>&1 || true; }   # foco compacta o desktop
 arm() {   # (re)agenda o fim para daqui a $1 segundos
     systemctl --user stop "$UNIT.timer" "$UNIT.service" 2>/dev/null
     systemd-run --user --quiet --unit="$UNIT" --on-active="${1}s" --timer-property=AccuracySec=1s \
@@ -21,6 +22,7 @@ finish() {   # $1 = mensagem
     read -r _ dnd < "$STATE" 2>/dev/null || dnd=false
     rm -f "$STATE"
     [[ $dnd == true ]] || swaync-client -df >/dev/null 2>&1
+    desk false
     notify-send -a foco -i alarm-symbolic "Foco" "$1"
     refresh
 }
@@ -32,7 +34,7 @@ start)
     echo "$end $(swaync-client -D 2>/dev/null || echo false)" > "$STATE"
     notify-send -a foco -i alarm-symbolic "Foco" "$min minutos. Notificações em silêncio até lá."
     sleep 0.3; swaync-client -dn >/dev/null 2>&1
-    arm $(( min * 60 )); refresh ;;
+    arm $(( min * 60 )); desk true; refresh ;;
 stop)
     [[ -f $STATE ]] || exit 0
     systemctl --user stop "$UNIT.timer" "$UNIT.service" 2>/dev/null

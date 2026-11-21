@@ -12,6 +12,8 @@ Column {
     property int nightTemp: 6000
     property bool dndOn: false
     property bool gameOn: false
+    property string monitor: ""                       // para o alfinete (salvo por monitor)
+    readonly property bool qaPinned: DeskState.pinned(monitor, "qa")
     readonly property string scripts: Quickshell.env("HOME") + "/.config/hypr/scripts"
 
     // Estado dos toggles a cada 2 s
@@ -46,8 +48,9 @@ Column {
         id: qaArea
         anchors.horizontalCenter: parent.horizontalCenter
         property bool open: false
-        width: Math.max(trigger.width, actions.implicitWidth)
-        height: trigger.height + (open ? actions.implicitHeight + 12 : 0)
+        readonly property bool shown: open || center.qaPinned
+        width: Math.max(trigger.width + 60, actions.implicitWidth)
+        height: trigger.height + (shown ? actions.implicitHeight + 12 : 0)
         Behavior on height { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } }
 
         HoverHandler {
@@ -59,21 +62,27 @@ Column {
             id: trigger
             anchors.horizontalCenter: parent.horizontalCenter
             text: "+"
-            on: qaArea.open
+            on: qaArea.shown
             implicitWidth: 64
             onHoveredChanged: if (hovered) { qaArea.open = true; closeTimer.stop() }
             onClicked: qaArea.open = !qaArea.open
-            label.text: qaArea.open ? "+  \uf077" : "+  \uf078"   // chevron vira pra cima quando aberto
+            label.text: qaArea.shown ? "+  \uf077" : "+  \uf078"   // chevron vira pra cima quando aberto
+        }
+        Pin {
+            anchors { left: trigger.right; leftMargin: 8; verticalCenter: trigger.verticalCenter }
+            visible: qaArea.shown
+            pinned: center.qaPinned
+            onToggled: DeskState.togglePin(center.monitor, "qa")
         }
 
         Row {
             id: actions
             anchors { horizontalCenter: parent.horizontalCenter; top: trigger.bottom; topMargin: 12 }
             spacing: 8
-            opacity: qaArea.open ? 1 : 0
+            opacity: qaArea.shown ? 1 : 0
             visible: opacity > 0
             Behavior on opacity { NumberAnimation { duration: 140 } }
-            transform: Translate { y: qaArea.open ? 0 : -6; Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
+            transform: Translate { y: qaArea.shown ? 0 : -6; Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
 
             Repeater {
                 model: [

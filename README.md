@@ -114,6 +114,9 @@ Os widgets ficam sobre o wallpaper (abaixo das janelas) e **só aparecem quando 
 ## Modo compacto e frase
 
 - **Compacto (`Super+Alt+D`, por monitor):** some o painel de atalhos e a coluna da direita; no lugar ficam as etiquetas `+ ATALHOS ⌄` e `+ AGENDA · MÍDIA · RECURSOS ⌃`, que abrem o bloco ao passar o mouse e fecham ao sair (igual aos quick actions). Estado salvo em `~/.local/state/eliasolie/desktop.json`; via terminal: `qs ipc call desktop toggleCompact`.
+- **Alfinete:** com um bloco aberto (atalhos, painéis da direita ou quick actions) aparece um alfinete no canto; clicou, o bloco fica fixo aberto (lima). Salvo por monitor junto do modo compacto.
+- **Modo foco compacta o desktop** em todos os monitores enquanto conta (`qs ipc call desktop setFocus true|false`).
+- **Relógio que voa:** o relógio da waybar (`custom/clock`, `hypr/scripts/bar-clock.py`) some quando o desktop do monitor está à mostra; o relógio grande sai do centro da barra crescendo até o canto e, ao abrir uma janela, encolhe de volta para a barra.
 - **Frase do dia:** discreta no canto superior direito (`quickshell/Phrase.qml`); clique troca, 6 cliques rápidos = easter egg.
 
 ## Integrações

@@ -23,17 +23,71 @@ PanelWindow {
     readonly property bool empty: !hmon || !hmon.activeWorkspace || hmon.activeWorkspace.toplevels.values.length === 0
     readonly property int edge: 56
 
-    // Modo compacto (Super+Alt+D, por monitor): esconde atalhos e painéis da direita;
-    // no lugar ficam etiquetas "+ ⌄" que abrem o bloco ao passar o mouse (igual aos quick actions)
-    readonly property bool compact: DeskState.isCompact(modelData.name)
+    // Modo compacto (Super+Alt+D, por monitor; o modo foco compacta todos): esconde atalhos e
+    // painéis da direita; no lugar ficam etiquetas "+ ⌄" que abrem o bloco ao passar o mouse.
+    // O alfinete (canto do bloco aberto) fixa o bloco aberto.
+    readonly property string mon: modelData.name
+    readonly property bool compact: DeskState.isCompact(mon) || DeskState.focus
+    readonly property bool pinLeft: DeskState.pinned(mon, "left")
+    readonly property bool pinRight: DeskState.pinned(mon, "right")
     property bool peekLeft: false
     property bool peekRight: false
-    readonly property bool showLeft: !compact || peekLeft
-    readonly property bool showRight: !compact || peekRight
+    readonly property bool showLeft: !compact || peekLeft || pinLeft
+    readonly property bool showRight: !compact || peekRight || pinRight
     onCompactChanged: { peekLeft = false; peekRight = false }
-    // Fecha só se o mouse não estiver nem na etiqueta nem no bloco (evita piscar)
-    Timer { id: closeLeft;  interval: 260; onTriggered: if (!leftTag.hovered && !leftHover.hovered) desk.peekLeft = false }
-    Timer { id: closeRight; interval: 260; onTriggered: if (!rightTag.hovered && !rightHover.hovered) desk.peekRight = false }
+    // Fecha só se o mouse não estiver na etiqueta, no bloco nem no alfinete (evita piscar)
+    Timer { id: closeLeft;  interval: 260; onTriggered: if (!leftTag.hovered && !leftHover.hovered && !leftPin.hovered) desk.peekLeft = false }
+    Timer { id: closeRight; interval: 260; onTriggered: if (!rightTag.hovered && !rightHover.hovered && !rightPin.hovered) desk.peekRight = false }
+
+    // ------------------------------------------------ voo do relógio
+    // Entrando no desktop: o relógio sai do centro da waybar e cresce até o canto;
+    // saindo: encolhe e volta para a barra (por cima das janelas, numa camada Overlay).
+    property bool flying: false
+    onEmptyChanged: flight.fly(empty)
+    PanelWindow {
+        id: flight
+        screen: desk.modelData
+        anchors { left: true; right: true; top: true; bottom: true }
+        exclusionMode: ExclusionMode.Ignore
+        color: "transparent"
+        WlrLayershell.layer: WlrLayer.Overlay
+        WlrLayershell.namespace: "eliasolie-clock-flight"
+        mask: Region {}                      // não pega cliques
+        visible: desk.flying
+
+        readonly property real small: 13 / 168      // relógio da waybar (Archivo 12px bold)
+        function fly(toDesk) {
+            const big = clock.mapToItem(content, 0, 0)
+            const sx = desk.width / 2 - ft.width * small / 2, sy = 14 - ft.height * small / 2
+            anim.stop()
+            fromX.value = toDesk ? sx : big.x;   toX.value = toDesk ? big.x : sx
+            fromY.value = toDesk ? sy : big.y;   toY.value = toDesk ? big.y : sy
+            fromS.value = toDesk ? small : 1;    toS.value = toDesk ? 1 : small
+            anim.easing = toDesk ? Easing.OutCubic : Easing.InOutCubic
+            desk.flying = true
+            anim.start()
+        }
+
+        Text {
+            id: ft
+            text: clock.text
+            color: Theme.bone
+            font: clock.font
+            lineHeight: 0.8
+            transformOrigin: Item.TopLeft
+        }
+        ParallelAnimation {
+            id: anim
+            property int easing: Easing.OutCubic
+            onFinished: desk.flying = false
+            NumberAnimation { id: fromX; property real value; target: ft; property: "x"; from: fromX.value; to: toX.value; duration: 420; easing.type: anim.easing }
+            NumberAnimation { id: fromY; property real value; target: ft; property: "y"; from: fromY.value; to: toY.value; duration: 420; easing.type: anim.easing }
+            NumberAnimation { id: fromS; property real value; target: ft; property: "scale"; from: fromS.value; to: toS.value; duration: 420; easing.type: anim.easing }
+        }
+        QtObject { id: toX; property real value }
+        QtObject { id: toY; property real value }
+        QtObject { id: toS; property real value }
+    }
 
     Item {
         id: content
@@ -50,6 +104,7 @@ PanelWindow {
 
         // =============================================== TOPO-CENTRO: quick actions
         CenterPiece {
+            monitor: desk.mon
             anchors { top: parent.top; horizontalCenter: parent.horizontalCenter; topMargin: desk.edge }
             visible: content.visible
         }
@@ -78,6 +133,13 @@ PanelWindow {
             Behavior on opacity { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } }
             transform: Translate { y: desk.showLeft ? 0 : -6; Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
             HoverHandler { id: leftHover; onHoveredChanged: if (desk.compact) hovered ? closeLeft.stop() : closeLeft.restart() }
+            Pin {
+                id: leftPin
+                anchors { right: parent.right; top: parent.top; margins: 12 }
+                visible: desk.compact
+                pinned: desk.pinLeft
+                onToggled: DeskState.togglePin(desk.mon, "left")
+            }
         }
 
         // =============================================== ESQUERDA: relógio
@@ -88,6 +150,7 @@ PanelWindow {
             // Relógio grande (Archivo 62% / 800, igual ao manual)
             Text {
                 id: clock
+                opacity: desk.flying ? 0 : 1          // durante o voo quem aparece é a cópia
                 text: Qt.formatTime(sysClock.date, "HH:mm")
                 color: Theme.bone
                 font.family: Theme.sans
@@ -194,6 +257,7 @@ PanelWindow {
             onClicked: desk.peekRight = true
         }
         ColumnLayout {
+            id: rightCol
             anchors { right: parent.right; bottom: parent.bottom; rightMargin: desk.edge; bottomMargin: desk.edge }
             width: 380
             spacing: 10
@@ -354,6 +418,15 @@ PanelWindow {
                     onClicked: Quickshell.execDetached(["kitty", "--class", "sysmon", "-e", "htop"])
                 }
             }
+        }
+        // Alfinete da coluna da direita (canto do primeiro card)
+        Pin {
+            id: rightPin
+            anchors { right: rightCol.right; top: rightCol.top; margins: 12 }
+            visible: desk.compact && rightCol.visible
+            opacity: rightCol.opacity
+            pinned: desk.pinRight
+            onToggled: DeskState.togglePin(desk.mon, "right")
         }
     }
 }
