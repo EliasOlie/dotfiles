@@ -23,6 +23,18 @@ PanelWindow {
     readonly property bool empty: !hmon || !hmon.activeWorkspace || hmon.activeWorkspace.toplevels.values.length === 0
     readonly property int edge: 56
 
+    // Modo compacto (Super+Alt+D, por monitor): esconde atalhos e painéis da direita;
+    // no lugar ficam etiquetas "+ ⌄" que abrem o bloco ao passar o mouse (igual aos quick actions)
+    readonly property bool compact: DeskState.isCompact(modelData.name)
+    property bool peekLeft: false
+    property bool peekRight: false
+    readonly property bool showLeft: !compact || peekLeft
+    readonly property bool showRight: !compact || peekRight
+    onCompactChanged: { peekLeft = false; peekRight = false }
+    // Fecha só se o mouse não estiver nem na etiqueta nem no bloco (evita piscar)
+    Timer { id: closeLeft;  interval: 260; onTriggered: if (!leftTag.hovered && !leftHover.hovered) desk.peekLeft = false }
+    Timer { id: closeRight; interval: 260; onTriggered: if (!rightTag.hovered && !rightHover.hovered) desk.peekRight = false }
+
     Item {
         id: content
         anchors.fill: parent
@@ -36,15 +48,36 @@ PanelWindow {
             onHoveredChanged: { Pointer.screen = desk.modelData.name; Pointer.inside = hovered }
         }
 
-        // =============================================== TOPO-CENTRO: frase do dia + quick actions
+        // =============================================== TOPO-CENTRO: quick actions
         CenterPiece {
-            anchors { top: parent.top; horizontalCenter: parent.horizontalCenter; topMargin: 96 }
+            anchors { top: parent.top; horizontalCenter: parent.horizontalCenter; topMargin: desk.edge }
             visible: content.visible
         }
 
+        // =============================================== TOPO-DIREITO: frase do dia (discreta)
+        Phrase {
+            anchors { right: parent.right; top: parent.top; rightMargin: desk.edge; topMargin: desk.edge + 6 }
+        }
+
         // =============================================== TOPO-ESQUERDO: atalhos
+        Badge {
+            id: leftTag
+            anchors { left: parent.left; top: parent.top; leftMargin: desk.edge; topMargin: desk.edge }
+            text: "atalhos"
+            label.text: "+  ATALHOS  \uf078"
+            opacity: desk.compact ? 1 : 0          // fica por baixo do bloco aberto
+            visible: opacity > 0
+            Behavior on opacity { NumberAnimation { duration: 140 } }
+            onHoveredChanged: hovered ? (desk.peekLeft = true, closeLeft.stop()) : closeLeft.restart()
+            onClicked: desk.peekLeft = true
+        }
         ShortcutsPanel {
             anchors { left: parent.left; top: parent.top; leftMargin: desk.edge; topMargin: desk.edge }
+            opacity: desk.showLeft ? 1 : 0
+            visible: opacity > 0
+            Behavior on opacity { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } }
+            transform: Translate { y: desk.showLeft ? 0 : -6; Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
+            HoverHandler { id: leftHover; onHoveredChanged: if (desk.compact) hovered ? closeLeft.stop() : closeLeft.restart() }
         }
 
         // =============================================== ESQUERDA: relógio
@@ -149,10 +182,26 @@ PanelWindow {
         }
 
         // =============================================== DIREITA: agenda, mídia, sistema
+        Badge {
+            anchors { right: parent.right; bottom: parent.bottom; rightMargin: desk.edge; bottomMargin: desk.edge }
+            id: rightTag
+            text: "painéis"
+            label.text: "+  AGENDA · MÍDIA · RECURSOS  \uf077"
+            opacity: desk.compact ? 1 : 0
+            visible: opacity > 0
+            Behavior on opacity { NumberAnimation { duration: 140 } }
+            onHoveredChanged: hovered ? (desk.peekRight = true, closeRight.stop()) : closeRight.restart()
+            onClicked: desk.peekRight = true
+        }
         ColumnLayout {
             anchors { right: parent.right; bottom: parent.bottom; rightMargin: desk.edge; bottomMargin: desk.edge }
             width: 380
             spacing: 10
+            opacity: desk.showRight ? 1 : 0
+            visible: opacity > 0
+            Behavior on opacity { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } }
+            transform: Translate { y: desk.showRight ? 0 : 6; Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
+            HoverHandler { id: rightHover; onHoveredChanged: if (desk.compact) hovered ? closeRight.stop() : closeRight.restart() }
 
             // ---------- AGENDA
             // Contrato: ~/.local/share/eliasolie/agenda.json

@@ -79,6 +79,7 @@ hyprctl reload
 | `Super+Alt+V` / `E` / `C` | clipboard / emoji / calculadora |
 | `Super+S` / `Super+Ctrl+S` | busca na web / alternar janelas |
 | `Super+Shift+O` | abrir projeto (repositórios git em `~/work`) num terminal |
+| `Super+Alt+D` | desktop compacto no monitor atual: esconde atalhos e painéis (etiquetas `+ ⌄` abrem ao passar o mouse); fica salvo |
 | `Super+H` | cola de atalhos: lista todos os keybinds e o que fazem (lê do Hyprland, sempre atualizada) |
 | `Super+J` | buscar no Janus (rofi) |
 | `Super+Alt+F` | modo foco: 25 min com "não perturbe" (de novo encerra) |
@@ -109,6 +110,11 @@ Os widgets ficam sobre o wallpaper (abaixo das janelas) e **só aparecem quando 
   ```json
   [{ "title": "Reunião", "start": "2026-11-21T14:00:00-03:00", "end": "2026-11-21T15:00:00-03:00", "where": "Meet" }]
   ```
+
+## Modo compacto e frase
+
+- **Compacto (`Super+Alt+D`, por monitor):** some o painel de atalhos e a coluna da direita; no lugar ficam as etiquetas `+ ATALHOS ⌄` e `+ AGENDA · MÍDIA · RECURSOS ⌃`, que abrem o bloco ao passar o mouse e fecham ao sair (igual aos quick actions). Estado salvo em `~/.local/state/eliasolie/desktop.json`; via terminal: `qs ipc call desktop toggleCompact`.
+- **Frase do dia:** discreta no canto superior direito (`quickshell/Phrase.qml`); clique troca, 6 cliques rápidos = easter egg.
 
 ## Integrações
 
