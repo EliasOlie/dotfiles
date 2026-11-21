@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=eliasolie
+Description=Logo EO_ no void com barra de progresso lima
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/eliasolie
+ScriptFile=/usr/share/plymouth/themes/eliasolie/eliasolie.script

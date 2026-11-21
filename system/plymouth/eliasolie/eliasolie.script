@@ -1,0 +1,62 @@
+# Boot eliasolie: fundo void, logo EO_ ao centro e uma barra fina lima embaixo.
+# (paleta: void #050505, line #2A2A27, signal #C8F031)
+
+Window.SetBackgroundTopColor(0.0196, 0.0196, 0.0196);
+Window.SetBackgroundBottomColor(0.0196, 0.0196, 0.0196);
+
+W = Window.GetWidth();
+H = Window.GetHeight();
+
+# Logo (quadrado lima com EO_), 128 px
+LOGO = 128;
+logo.image = Image("logo.png").Scale(LOGO, LOGO);
+logo.sprite = Sprite(logo.image);
+logo.x = Window.GetX() + W / 2 - LOGO / 2;
+logo.y = Window.GetY() + H / 2 - LOGO / 2 - 24;
+logo.sprite.SetPosition(logo.x, logo.y, 1);
+logo.sprite.SetOpacity(0);
+
+# Barra: trilho grafite + progresso lima, 2 px de altura, largura do logo x 2
+BAR_W = LOGO * 2;
+bar.x = Window.GetX() + W / 2 - BAR_W / 2;
+bar.y = logo.y + LOGO + 40;
+track.sprite = Sprite(Image("track.png").Scale(BAR_W, 2));
+track.sprite.SetPosition(bar.x, bar.y, 1);
+fill.base = Image("bar.png");
+fill.sprite = Sprite();
+fill.sprite.SetPosition(bar.x, bar.y, 2);
+
+# Logo aparece com um fade rápido
+fade = 0;
+fun refresh_cb() {
+    if (fade < 1) {
+        fade = fade + 0.05;
+        if (fade > 1) fade = 1;
+        logo.sprite.SetOpacity(fade);
+        track.sprite.SetOpacity(fade);
+    }
+}
+Plymouth.SetRefreshFunction(refresh_cb);
+
+fun progress_cb(duration, progress) {
+    w = Math.Int(BAR_W * progress);
+    if (w < 1) w = 1;
+    fill.sprite.SetImage(fill.base.Scale(w, 2));
+}
+Plymouth.SetBootProgressFunction(progress_cb);
+
+# Senha (só aparece se um dia houver disco criptografado): pontinhos lima
+fun password_cb(prompt, bullets) {
+    s = "";
+    for (i = 0; i < bullets; i++) s = s + "• ";
+    pw.sprite = Sprite(Image.Text(prompt + "  " + s, 0.784, 0.941, 0.192));
+    pw.sprite.SetPosition(Window.GetX() + W / 2 - pw.sprite.GetImage().GetWidth() / 2, bar.y + 30, 3);
+}
+Plymouth.SetDisplayPasswordFunction(password_cb);
+
+fun normal_cb() { pw.sprite = NULL; }
+Plymouth.SetDisplayNormalFunction(normal_cb);
+
+# Desligando/atualizando: barra cheia
+fun quit_cb() { fill.sprite.SetImage(fill.base.Scale(BAR_W, 2)); }
+Plymouth.SetQuitFunction(quit_cb);

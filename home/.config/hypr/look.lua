@@ -73,6 +73,9 @@ for _, cls in ipairs({ "^pinentry-qt$", "^org.pulseaudio.pavucontrol$", "^bluema
     hl.window_rule({ name = "float-" .. cls, match = { class = cls }, float = true, center = true })
 end
 
+-- Leitor do Janus (Super+J): flutuante, centralizado, confortável para ler
+hl.window_rule({ name = "janus-view", match = { class = "^janus-view$" }, float = true, center = true, size = "1000 720" })
+
 -- Autostart do visual
 hl.on("hyprland.start", function()
     hl.exec_cmd("waybar")

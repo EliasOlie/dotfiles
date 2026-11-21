@@ -51,3 +51,4 @@ bat
 zoxide
 fzf
 git
+noto-fonts-emoji

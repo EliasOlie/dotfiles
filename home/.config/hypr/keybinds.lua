@@ -215,9 +215,9 @@ end, "terminal dropdown")
 -- ------------------------------------------------------------
 -- Produtividade (rofi)
 -- ------------------------------------------------------------
-bind(mainMod .. " + ALT + V",  sh("pkill rofi || cliphist list | rofi -dmenu -p 'Clipboard' | cliphist decode | wl-copy"), "histórico do clipboard")
-bind(mainMod .. " + ALT + E",  sh("pkill rofi || rofi -modi emoji -show emoji"),            "emoji")
-bind(mainMod .. " + ALT + C",  sh("pkill rofi || rofi -show calc -modi calc -no-show-match -no-sort"), "calculadora")
+bind(mainMod .. " + ALT + V",  sh(scripts .. "/rofi-tools.sh clip"), "histórico do clipboard")
+bind(mainMod .. " + ALT + E",  sh(scripts .. "/rofi-tools.sh emoji"), "emoji")
+bind(mainMod .. " + ALT + C",  sh(scripts .. "/rofi-tools.sh calc"),  "calculadora")
 bind(mainMod .. " + S",        sh(scripts .. "/websearch.sh"),                             "busca na web")
 bind(mainMod .. " + CTRL + S", sh("pkill rofi || rofi -show window"),                     "alternar janelas")
 

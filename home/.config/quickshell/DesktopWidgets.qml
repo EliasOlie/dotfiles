@@ -71,6 +71,23 @@ PanelWindow {
                     text: Qt.locale("pt_BR").toString(sysClock.date, "dddd, d 'de' MMMM").toUpperCase()
                     color: Theme.statik; font.family: Theme.mono; font.pixelSize: 13; font.letterSpacing: 3
                 }
+                // Clima (Serra Talhada) na mesma linha, separado por pipe
+                Text {
+                    visible: Weather.ok
+                    text: "|"
+                    color: Theme.line; font.family: Theme.mono; font.pixelSize: 13
+                }
+                Text {
+                    visible: Weather.ok
+                    text: Weather.glyph
+                    color: Theme.signal; font.family: Theme.mono; font.pixelSize: 15
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+                Text {
+                    visible: Weather.ok
+                    text: (Weather.temp + "° " + Weather.desc + "  " + Weather.max + "°/" + Weather.min + "°").toUpperCase()
+                    color: Theme.statik; font.family: Theme.mono; font.pixelSize: 13; font.letterSpacing: 3
+                }
             }
         }
 
@@ -104,6 +121,22 @@ PanelWindow {
                         font.family: Theme.mono; font.pixelSize: 11; font.letterSpacing: 2
                     }
                 }
+            }
+            // Backup (restic): "| ■ BACKUP 22H"
+            Text {
+                visible: VpsStatus.services.length > 0
+                text: "|"
+                color: Theme.line; font.family: Theme.mono; font.pixelSize: 12
+            }
+            Rectangle {
+                width: 7; height: 7
+                anchors.verticalCenter: parent.verticalCenter
+                color: BackupStatus.fresh ? Theme.signal : Theme.alert
+            }
+            Text {
+                text: "BACKUP " + BackupStatus.age.toUpperCase()
+                color: BackupStatus.fresh ? Theme.statik : Theme.alert
+                font.family: Theme.mono; font.pixelSize: 11; font.letterSpacing: 2
             }
         }
             MouseArea {

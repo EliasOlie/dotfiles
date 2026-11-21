@@ -107,6 +107,16 @@ Os widgets ficam sobre o wallpaper (abaixo das janelas) e **só aparecem quando 
   [{ "title": "Reunião", "start": "2026-11-21T14:00:00-03:00", "end": "2026-11-21T15:00:00-03:00", "where": "Meet" }]
   ```
 
+## Integrações
+
+- **Clima (Serra Talhada):** na linha da data, via Open-Meteo (sem chave), a cada 30 min. Outra cidade: `lat`/`lon` em `quickshell/Weather.qml`.
+- **Backup:** `■ BACKUP 22H` no rodapé e na tela de bloqueio (`hypr/scripts/backup-status.sh`, lê `RESTIC_*` do `~/.zshrc.local`, cache de 30 min). Coral se passar de 26 h.
+- **Modo foco:** módulo `FOCO` na waybar. Clique = 25 min com "não perturbe"; rolar = ±5 min; no fim, notificação e DND volta como estava (`hypr/scripts/focus.sh`, timer do systemd).
+- **Janus no rofi:** `hypr/scripts/janus.py` fala com o Janus pelo MCP (stdio). Lista os artigos (o rofi filtra), Enter em texto livre busca no Janus (inclui decisões), e o item abre num kitty flutuante. Caminho: `$JANUS_MCP` (padrão `~/work/janus/scripts/mcp.sh`).
+- **Utilitários rofi** (`hypr/scripts/rofi-tools.sh`): clipboard com miniatura de imagens (`alt d` apaga, `alt shift d` limpa), emoji (precisa `noto-fonts-emoji`) e calculadora (Enter copia).
+- **Tela de bloqueio:** música tocando + linha de status (VPS e backup) via `hypr/scripts/lock-status.sh`.
+- **Boot:** tema Plymouth em `system/plymouth/eliasolie` (logo EO_ + barra lima). Instala com `bash system/install-boot.sh` (pacotes, hook, `quiet splash` no systemd-boot, initramfs e cursor lima no SDDM, tudo com backup).
+
 ## Notas
 
 - O Hyprland em Lua não aceita mais `hyprctl dispatch <nome> <args>` nem `hyprctl keyword`. Scripts usam `hyprctl dispatch 'hl.dsp....'` ou `hyprctl repl`.
