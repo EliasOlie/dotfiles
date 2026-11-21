@@ -299,11 +299,11 @@ PanelWindow {
             visible: WhatsApp.anyOpen
             opacity: footerVps.opacity
             Repeater {
-                model: WhatsApp.accounts.filter(a => (WhatsApp.counts[a.id] ?? -1) >= 0)
+                model: WhatsApp.open
                 delegate: Row {
                     id: wa
                     required property var modelData
-                    readonly property int n: WhatsApp.counts[modelData.id] ?? 0
+                    readonly property int n: modelData.n
                     spacing: 12
                     Text { text: "|"; color: Theme.line; font.family: Theme.mono; font.pixelSize: 12 }
                     Rectangle {
@@ -312,7 +312,7 @@ PanelWindow {
                         color: wa.n > 0 ? Theme.signal : Theme.statik
                     }
                     Text {
-                        text: wa.modelData.label + (wa.n > 0 ? " " + wa.n : "")
+                        text: (wa.modelData.short || wa.modelData.name.toUpperCase()) + (wa.n > 0 ? " " + wa.n : "")
                         color: wa.n > 0 ? Theme.signal : (waMouse.containsMouse ? Theme.bone : Theme.statik)
                         font.family: Theme.mono; font.pixelSize: 11; font.letterSpacing: 2
                         font.weight: wa.n > 0 ? Font.Bold : Font.Normal

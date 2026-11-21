@@ -2,3 +2,6 @@
 *.bak
 __pycache__/
 .zshrc.local
+
+# segredos locais (ex.: agenda.env) nunca vão pro repo
+home/.config/eliasolie/*.env

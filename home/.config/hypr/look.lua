@@ -76,11 +76,20 @@ end
 -- Leitor do Janus (Super+J): flutuante, centralizado, confortável para ler
 hl.window_rule({ name = "janus-view", match = { class = "^janus-view$" }, float = true, center = true, size = "1000 720" })
 
--- WhatsApp (3 contas, whatsapp.sh): cada uma flutua no seu workspace especial
--- e aparece por cima do que você está fazendo (menu Super+Shift+W)
-for _, id in ipairs({ "pessoal", "profissional", "jac" }) do
-    hl.window_rule({ name = "wa-" .. id, match = { class = "^wa-" .. id .. "$" },
-        float = true, center = true, size = "1180 800", workspace = "special:wa-" .. id .. " silent" })
+-- WhatsApp (contas em ~/.config/eliasolie/whatsapp.json, whatsapp.sh): cada conta
+-- flutua escondida no seu workspace especial e aparece por cima do que você está
+-- fazendo (Super+Shift+W). Em modo app o Brave usa a classe
+-- "brave-web.whatsapp.com__-wa-<id>" (o perfil interno diferencia as contas).
+-- no_initial_focus: abrir escondida no login não rouba o foco de ninguém.
+do
+    local f = io.open(os.getenv("HOME") .. "/.config/eliasolie/whatsapp.json")
+    local conf = f and f:read("a") or ""
+    if f then f:close() end
+    for id in conf:gmatch('"id"%s*:%s*"([%w%-_]+)"') do
+        hl.window_rule({ name = "wa-" .. id, match = { class = "^brave-web\\.whatsapp\\.com__-wa-" .. id .. "$" },
+            float = true, center = true, size = "1180 800", no_initial_focus = true,
+            workspace = "special:wa-" .. id .. " silent" })
+    end
 end
 
 -- Autostart do visual
