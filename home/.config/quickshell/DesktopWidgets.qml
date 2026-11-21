@@ -74,6 +74,47 @@ PanelWindow {
             }
         }
 
+        // =============================================== RODAPÉ-CENTRO: status da VPS
+        // Discreto: "● nome | ● nome" — lima no ar, coral fora. Clique abre o Dokploy.
+        Item {
+            anchors { horizontalCenter: parent.horizontalCenter; bottom: parent.bottom; bottomMargin: desk.edge - 20 }
+            width: vpsRow.implicitWidth; height: vpsRow.implicitHeight
+        Row {
+            id: vpsRow
+            spacing: 12
+            Repeater {
+                model: VpsStatus.services
+                delegate: Row {
+                    required property var modelData
+                    required property int index
+                    spacing: 12
+                    Text {
+                        visible: index > 0
+                        text: "|"
+                        color: Theme.line; font.family: Theme.mono; font.pixelSize: 12
+                    }
+                    Rectangle {
+                        width: 7; height: 7
+                        anchors.verticalCenter: parent.verticalCenter
+                        color: modelData.up ? Theme.signal : Theme.alert
+                    }
+                    Text {
+                        text: modelData.name.toUpperCase()
+                        color: modelData.up ? (vpsMouse.containsMouse ? Theme.bone : Theme.statik) : Theme.alert
+                        font.family: Theme.mono; font.pixelSize: 11; font.letterSpacing: 2
+                    }
+                }
+            }
+        }
+            MouseArea {
+                id: vpsMouse
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+                onClicked: if (VpsStatus.panel) Quickshell.execDetached(["brave", VpsStatus.panel])
+            }
+        }
+
         // =============================================== DIREITA: agenda, mídia, sistema
         ColumnLayout {
             anchors { right: parent.right; bottom: parent.bottom; rightMargin: desk.edge; bottomMargin: desk.edge }
@@ -203,52 +244,6 @@ PanelWindow {
                             }
                         }
                     }
-                }
-            }
-
-            // ---------- VPS (serviços de vps.json; clique abre o Dokploy)
-            Card {
-                id: vps
-                label: "VPS"
-                title: VpsStatus.services.length === 0 ? "CHECANDO…"
-                     : VpsStatus.down === 0 ? "TUDO NO AR"
-                     : VpsStatus.down + (VpsStatus.down === 1 ? " SERVIÇO FORA" : " SERVIÇOS FORA")
-                glyph: "\u{f048b}"
-                Layout.fillWidth: true
-                Layout.preferredHeight: headerHeight + pad * 2 + Math.max(1, VpsStatus.services.length) * 20 - 6
-                border.color: VpsStatus.down > 0 ? Theme.alert : (hovered ? Theme.signal : Theme.line)
-
-                Column {
-                    anchors.fill: parent
-                    spacing: 6
-                    Repeater {
-                        model: VpsStatus.services
-                        delegate: Item {
-                            required property var modelData
-                            width: parent.width; height: 14
-                            Rectangle {
-                                width: 8; height: 8
-                                anchors.verticalCenter: parent.verticalCenter
-                                color: modelData.up ? Theme.signal : Theme.alert
-                            }
-                            Text {
-                                x: 20; anchors.verticalCenter: parent.verticalCenter
-                                text: modelData.name
-                                color: Theme.bone; font.family: Theme.mono; font.pixelSize: 12
-                            }
-                            Text {
-                                anchors { right: parent.right; verticalCenter: parent.verticalCenter }
-                                text: modelData.up ? modelData.ms + " ms" : (modelData.code ? "fora · " + modelData.code : "sem resposta")
-                                color: modelData.up ? Theme.statik : Theme.alert
-                                font.family: Theme.mono; font.pixelSize: 11
-                            }
-                        }
-                    }
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: if (VpsStatus.panel) Quickshell.execDetached(["brave", VpsStatus.panel])
                 }
             }
 

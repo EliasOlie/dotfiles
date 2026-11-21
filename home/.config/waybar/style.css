@@ -67,3 +67,7 @@ tooltip {
 #battery.critical:not(.charging) { color: #050505; background: #FF5A4E; }
 
 #tray > .needs-attention { background: #FF5A4E; }
+
+/* Bandeja recolhível: chevron estático, lima no hover */
+#custom-tray-toggle { color: #8A8A84; padding: 0 8px; }
+#custom-tray-toggle:hover { color: #C8F031; }
