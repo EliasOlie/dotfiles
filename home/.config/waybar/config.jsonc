@@ -8,7 +8,15 @@
 
   "modules-left":   ["custom/logo", "hyprland/workspaces", "hyprland/window"],
   "modules-center": ["custom/clock"],
-  "modules-right":  ["group/tray", "custom/gpu", "cpu", "memory", "custom/focus", "custom/nightlight", "pulseaudio", "network", "bluetooth", "battery", "custom/notification"],
+  "modules-right":  ["group/tray", "custom/whatsapp", "custom/gpu", "cpu", "memory", "custom/focus", "custom/nightlight", "pulseaudio", "network", "bluetooth", "battery", "custom/notification"],
+
+  // WhatsApp: total de não lidas das 3 contas (some se nenhuma estiver aberta)
+  "custom/whatsapp": {
+    "exec": "~/.config/hypr/scripts/whatsapp.sh waybar",
+    "return-type": "json",
+    "interval": 5,
+    "on-click": "~/.config/hypr/scripts/whatsapp.sh menu"
+  },
 
   // Modo foco (pomodoro): clique liga/desliga, rolar soma/tira 5 min
   "custom/focus": {
@@ -123,10 +131,13 @@
   },
 
   "battery": {
+    "interval": 5,
     "states": { "warning": 25, "critical": 12 },
+    // Na tomada fica sempre lima com o plugue (inclusive "cheia", que antes sumia)
     "format": "BAT {capacity}%",
-    "format-charging": "BAT {capacity}% +",
-    "format-plugged": "AC {capacity}%",
+    "format-charging": "󰂄 CARREGANDO {capacity}%",
+    "format-plugged": "󰚥 TOMADA {capacity}%",
+    "format-full": "󰚥 TOMADA {capacity}%",
     "tooltip-format": "{timeTo}"
   },
 

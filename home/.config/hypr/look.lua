@@ -76,6 +76,13 @@ end
 -- Leitor do Janus (Super+J): flutuante, centralizado, confortável para ler
 hl.window_rule({ name = "janus-view", match = { class = "^janus-view$" }, float = true, center = true, size = "1000 720" })
 
+-- WhatsApp (3 contas, whatsapp.sh): cada uma flutua no seu workspace especial
+-- e aparece por cima do que você está fazendo (menu Super+Shift+W)
+for _, id in ipairs({ "pessoal", "profissional", "jac" }) do
+    hl.window_rule({ name = "wa-" .. id, match = { class = "^wa-" .. id .. "$" },
+        float = true, center = true, size = "1180 800", workspace = "special:wa-" .. id .. " silent" })
+end
+
 -- Autostart do visual
 hl.on("hyprland.start", function()
     hl.exec_cmd("waybar")
@@ -83,4 +90,6 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("hypridle")
     hl.exec_cmd("hyprsunset")         -- luz noturna automática (hyprsunset.conf)
     hl.exec_cmd("nm-applet --indicator")
+    hl.exec_cmd("~/.config/hypr/scripts/power-watch.sh")   -- aviso de carregador ligado/desligado
+    hl.exec_cmd("sh -c 'sleep 8; ~/.config/hypr/scripts/whatsapp.sh start'")   -- WhatsApps escondidos
 end)

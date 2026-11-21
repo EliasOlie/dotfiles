@@ -81,6 +81,7 @@ hyprctl reload
 | `Super+Shift+O` | abrir projeto (repositórios git em `~/work`) num terminal |
 | `Super+Alt+D` | desktop compacto no monitor atual: esconde atalhos e painéis (etiquetas `+ ⌄` abrem ao passar o mouse); fica salvo |
 | `Super+A` | agenda grande no centro do desktop (monitor atual; fica salvo). Com janelas na frente, vai pro desktop |
+| `Super+Shift+W` | WhatsApp: menu das 3 contas (pessoal, profissional, Grupo JAC) com não lidas; Enter mostra/esconde a conta |
 | `Super+H` | cola de atalhos: lista todos os keybinds e o que fazem (lê do Hyprland, sempre atualizada) |
 | `Super+J` | buscar no Janus (rofi) |
 | `Super+Alt+F` | modo foco: 25 min com "não perturbe" (de novo encerra) |
@@ -124,6 +125,8 @@ Os widgets ficam sobre o wallpaper (abaixo das janelas) e **só aparecem quando 
 - **Agenda** (`quickshell/AgendaCard.qml`, dados em `~/.local/share/eliasolie/agenda.json` pelo timer `agenda-sync` do projeto agenda): calendário do mês com marcação por marca e próximos eventos. `Super+A` abre a agenda "do wallpaper" (`quickshell/AgendaWall.qml`, por monitor): sem card, o mês escrito em tamanho grande sobre a grade de pontos, cada dia num quadrado da própria grade e os próximos eventos à direita; a coluna da direita recolhe numa etiqueta. Dados compartilhados em `quickshell/AgendaData.qml`. Também aparece na tela de bloqueio (`lock-status.sh agenda`).
 - **Lembretes da agenda** (`quickshell/AgendaNotify.qml`): notificação 1 h e 10 min antes; dia inteiro às 8h. Cada aviso sai uma vez (`~/.local/state/eliasolie/agenda-notified.json`).
 - **Workspaces vai-e-volta:** `Super+N` no workspace em que você já está volta para o anterior daquele monitor.
+- **WhatsApp (3 contas, `hypr/scripts/whatsapp.sh`):** cada conta é um "app" do WhatsApp Web (Brave `--app` com dados próprios em `~/.local/share/whatsapp/<conta>` e classe `wa-<conta>`), aberto escondido num workspace especial no login. Não lidas vêm do título da janela ("(3) WhatsApp"), sem API: aparecem no menu (`Super+Shift+W`), na waybar (`󰖣 15`) e no rodapé do desktop (`■ PESSOAL 3 | ■ JAC 12`, clique abre). Na primeira vez, escaneie o QR de cada conta.
+- **Carregador:** a bateria mostra `󰚥 TOMADA` / `󰂄 CARREGANDO` em lima (inclusive com 100%), e `power-watch.sh` avisa por notificação quando o carregador é conectado ou desconectado.
 - **Frase do dia:** discreta no canto superior direito (`quickshell/Phrase.qml`); clique troca, 6 cliques rápidos = easter egg.
 
 ## Integrações

@@ -53,7 +53,7 @@ tooltip {
   letter-spacing: 1px;
 }
 
-#tray, #custom-gpu, #cpu, #memory, #custom-nightlight, #custom-focus, #pulseaudio, #network, #bluetooth, #battery, #custom-notification {
+#tray, #custom-gpu, #cpu, #memory, #custom-nightlight, #custom-focus, #custom-whatsapp, #pulseaudio, #network, #bluetooth, #battery, #custom-notification {
   padding: 0 10px;
   color: #8A8A84;
 }
@@ -62,7 +62,7 @@ tooltip {
 
 #pulseaudio.muted,
 #network.disconnected { color: #2A2A27; }
-#battery.charging, #battery.plugged { color: #C8F031; }
+#battery.charging, #battery.plugged, #battery.full { color: #C8F031; }
 #battery.warning:not(.charging) { color: #FF5A4E; }
 #battery.critical:not(.charging) { color: #050505; background: #FF5A4E; }
 
@@ -75,3 +75,7 @@ tooltip {
 /* Modo foco: apagado quando parado, lima cheio contando */
 #custom-focus.off { color: #8A8A84; }
 #custom-focus.on  { color: #050505; background: #C8F031; font-weight: bold; }
+
+/* WhatsApp: cinza em dia, lima com não lidas */
+#custom-whatsapp.zero   { color: #8A8A84; }
+#custom-whatsapp.unread { color: #C8F031; font-weight: bold; }

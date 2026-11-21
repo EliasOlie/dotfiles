@@ -232,7 +232,10 @@ PanelWindow {
         // =============================================== RODAPÉ-CENTRO: status da VPS
         // Discreto: "● nome | ● nome" — lima no ar, coral fora. Clique abre o Dokploy.
         Item {
+            id: footerVps
             anchors { horizontalCenter: parent.horizontalCenter; bottom: parent.bottom; bottomMargin: desk.edge - 20 }
+            // o conjunto (VPS + WhatsApp) fica centralizado
+            anchors.horizontalCenterOffset: waRow.visible ? -(waRow.width + 12) / 2 : 0
             width: vpsRow.implicitWidth; height: vpsRow.implicitHeight
             opacity: desk.stage(5)
             Behavior on opacity { NumberAnimation { duration: 260; easing.type: Easing.OutCubic } }
@@ -286,6 +289,42 @@ PanelWindow {
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 onClicked: if (VpsStatus.panel) Quickshell.execDetached(["brave", VpsStatus.panel])
+            }
+        }
+        // WhatsApp no rodapé: "| ■ PESSOAL 3 | ■ PROF | ■ JAC 12" (lima = não lidas; clique abre a conta)
+        Row {
+            id: waRow
+            anchors { left: footerVps.right; leftMargin: 12; verticalCenter: footerVps.verticalCenter }
+            spacing: 12
+            visible: WhatsApp.anyOpen
+            opacity: footerVps.opacity
+            Repeater {
+                model: WhatsApp.accounts.filter(a => (WhatsApp.counts[a.id] ?? -1) >= 0)
+                delegate: Row {
+                    id: wa
+                    required property var modelData
+                    readonly property int n: WhatsApp.counts[modelData.id] ?? 0
+                    spacing: 12
+                    Text { text: "|"; color: Theme.line; font.family: Theme.mono; font.pixelSize: 12 }
+                    Rectangle {
+                        width: 7; height: 7
+                        anchors.verticalCenter: parent.verticalCenter
+                        color: wa.n > 0 ? Theme.signal : Theme.statik
+                    }
+                    Text {
+                        text: wa.modelData.label + (wa.n > 0 ? " " + wa.n : "")
+                        color: wa.n > 0 ? Theme.signal : (waMouse.containsMouse ? Theme.bone : Theme.statik)
+                        font.family: Theme.mono; font.pixelSize: 11; font.letterSpacing: 2
+                        font.weight: wa.n > 0 ? Font.Bold : Font.Normal
+                        MouseArea {
+                            id: waMouse
+                            anchors { fill: parent; margins: -6; leftMargin: -24 }
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: WhatsApp.toggle(wa.modelData.id)
+                        }
+                    }
+                }
             }
         }
 
