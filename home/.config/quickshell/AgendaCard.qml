@@ -14,11 +14,6 @@ Card {
     glyph: "\u{f00ed}"
     implicitHeight: headerHeight + pad * 2 + col.implicitHeight
 
-    // Versão grande (Super+A): calendário à esquerda e eventos à direita, tudo maior
-    property bool big: false
-    readonly property int maxEvents: big ? 7 : 4
-    readonly property int cellH: big ? 58 : 36
-
     // ---------------------------------------------------------------- dados
     readonly property var brandColor: ({ eliasolie: Theme.signal, conectame: "#6EEB62", pessoal: "#7AA7FF" })
     readonly property var brandLabel: ({ eliasolie: "ELIASOLIE", conectame: "CONECTAME", pessoal: "PESSOAL" })
@@ -66,9 +61,9 @@ Card {
     }
 
     readonly property var listed: {
-        if (selectedKey) return events.filter(e => e._days.indexOf(selectedKey) >= 0).slice(0, maxEvents + 1)
+        if (selectedKey) return events.filter(e => e._days.indexOf(selectedKey) >= 0).slice(0, 5)
         const now = today
-        return events.filter(e => e._e >= now).slice(0, maxEvents)
+        return events.filter(e => e._e >= now).slice(0, 4)
     }
 
     // Grade do mês: começa no domingo, 5 ou 6 semanas conforme o mês
@@ -122,16 +117,9 @@ Card {
     }
 
     // ---------------------------------------------------------------- visual
-    Grid {
+    Column {
         id: col
         width: parent.width
-        columns: agenda.big ? 2 : 1
-        columnSpacing: 28
-        rowSpacing: 10
-
-      Column {
-        id: calPart
-        width: agenda.big ? (col.width - col.columnSpacing) * 0.56 : col.width
         spacing: 10
 
         // Legenda + navegação do mês
@@ -196,7 +184,7 @@ Card {
                 delegate: Text {
                     required property string modelData
                     required property int index
-                    width: calPart.width / 7
+                    width: col.width / 7
                     horizontalAlignment: Text.AlignHCenter
                     text: modelData
                     color: index === 0 ? Qt.alpha(Theme.statik, 0.6) : Theme.statik
@@ -218,8 +206,8 @@ Card {
                     readonly property bool isToday: key === agenda.todayKey
                     readonly property bool isSelected: key === agenda.selectedKey
                     readonly property var dayMarks: agenda.marks[key] || []
-                    width: calPart.width / 7
-                    height: agenda.cellH
+                    width: col.width / 7
+                    height: 36
 
                     Rectangle {
                         anchors { fill: parent; margins: 2 }
@@ -233,7 +221,7 @@ Card {
                         text: cell.modelData.getDate()
                         color: cell.isToday ? Theme.signal
                              : cell.inMonth ? Theme.bone : Qt.alpha(Theme.statik, 0.35)
-                        font.family: Theme.mono; font.pixelSize: agenda.big ? 15 : 12
+                        font.family: Theme.mono; font.pixelSize: 12
                         font.weight: cell.isToday ? Font.Bold : Font.Normal
                     }
                     Row {
@@ -244,7 +232,7 @@ Card {
                             model: cell.dayMarks.slice(0, 4)
                             delegate: Rectangle {
                                 required property string modelData
-                                width: agenda.big ? 7 : 5; height: agenda.big ? 7 : 5
+                                width: 5; height: 5
                                 color: agenda.colorOf(modelData)
                             }
                         }
@@ -263,14 +251,7 @@ Card {
             }
         }
 
-      }   // calPart
-
-      Column {
-        id: listPart
-        width: agenda.big ? col.width - col.columnSpacing - calPart.width : col.width
-        spacing: 10
-
-        Rectangle { visible: !agenda.big; width: parent.width; height: 1; color: Theme.line }
+        Rectangle { width: parent.width; height: 1; color: Theme.line }
 
         Text {
             text: agenda.selectedKey
@@ -288,8 +269,8 @@ Card {
                 id: ev
                 required property var modelData
                 readonly property string link: (modelData.where || "").startsWith("http") ? modelData.where : ""
-                width: listPart.width
-                height: agenda.big ? 58 : 50
+                width: col.width
+                height: 50
                 color: Theme.void_
                 border.width: 1
                 border.color: evHover.hovered && link ? agenda.colorOf(modelData.brand) : Theme.line
@@ -338,6 +319,5 @@ Card {
             text: !agenda.hasFile ? "sincronizando" : agenda.selectedKey ? "dia livre" : "nada pela frente"
             color: Qt.alpha(Theme.statik, 0.6); font.family: Theme.mono; font.pixelSize: 12
         }
-      }   // listPart
     }
 }

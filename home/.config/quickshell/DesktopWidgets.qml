@@ -36,7 +36,7 @@ PanelWindow {
     property bool peekLeft: false
     property bool peekRight: false
     readonly property bool showLeft: !compact || peekLeft || pinLeft
-    readonly property bool showRight: !compact || peekRight || pinRight
+    readonly property bool showRight: (!compact && !bigAgenda) || peekRight || pinRight
     onCompactChanged: { peekLeft = false; peekRight = false }
     // Fecha só se o mouse não estiver na etiqueta, no bloco nem no alfinete (evita piscar)
     Timer { id: closeLeft;  interval: 260; onTriggered: if (!leftTag.hovered && !leftHover.hovered && !leftPin.hovered) desk.peekLeft = false }
@@ -289,17 +289,12 @@ PanelWindow {
             }
         }
 
-        // =============================================== CENTRO: agenda grande (Super+A, por monitor)
-        AgendaCard {
-            big: true
-            anchors.centerIn: parent
-            width: Math.min(1040, parent.width - 2 * desk.edge - 520)
-            height: implicitHeight
+        // =============================================== CENTRO: agenda do wallpaper (Super+A, por monitor)
+        AgendaWall {
+            anchors.fill: parent
             opacity: desk.bigAgenda ? desk.stage(3) : 0
             visible: opacity > 0.01
-            scale: desk.bigAgenda ? 1 : 0.96
-            Behavior on opacity { NumberAnimation { duration: 220; easing.type: Easing.OutCubic } }
-            Behavior on scale { NumberAnimation { duration: 260; easing.type: Easing.OutCubic } }
+            Behavior on opacity { NumberAnimation { duration: 260; easing.type: Easing.OutCubic } }
         }
 
         // =============================================== DIREITA: agenda, mídia, sistema
@@ -308,7 +303,7 @@ PanelWindow {
             id: rightTag
             text: "painéis"
             label.text: "+  AGENDA · MÍDIA · RECURSOS  \uf077"
-            opacity: (desk.compact ? 1 : 0) * desk.stage(6)
+            opacity: (desk.compact || desk.bigAgenda ? 1 : 0) * desk.stage(6)
             visible: opacity > 0
             Behavior on opacity { NumberAnimation { duration: 140 } }
             onHoveredChanged: hovered ? (desk.peekRight = true, closeRight.stop()) : closeRight.restart()
@@ -323,7 +318,7 @@ PanelWindow {
             visible: opacity > 0
             Behavior on opacity { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } }
             transform: Translate { y: (desk.showRight ? 0 : 6) + (desk.intro >= 6 ? 0 : 14); Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
-            HoverHandler { id: rightHover; onHoveredChanged: if (desk.compact) hovered ? closeRight.stop() : closeRight.restart() }
+            HoverHandler { id: rightHover; onHoveredChanged: if (desk.compact || desk.bigAgenda) hovered ? closeRight.stop() : closeRight.restart() }
 
             // ---------- AGENDA (calendário + próximos eventos; ver AgendaCard.qml)
             AgendaCard {
@@ -423,7 +418,7 @@ PanelWindow {
         Pin {
             id: rightPin
             anchors { right: rightCol.right; top: rightCol.top; margins: 12 }
-            visible: desk.compact && rightCol.visible
+            visible: (desk.compact || desk.bigAgenda) && rightCol.visible
             opacity: rightCol.opacity
             pinned: desk.pinRight
             onToggled: DeskState.togglePin(desk.mon, "right")
