@@ -65,8 +65,8 @@ hl.animation({ leaf = "workspaces", enabled = true, speed = 2.5, bezier = "snap"
 
 -- Tema / cursor / Qt
 hl.env("QT_QPA_PLATFORMTHEME", "qt6ct")
-hl.env("XCURSOR_THEME", "Bibata-Modern-Classic")
-hl.env("HYPRCURSOR_THEME", "Bibata-Modern-Classic")
+hl.env("XCURSOR_THEME", "Eliasolie-Cursor")
+hl.env("HYPRCURSOR_THEME", "Eliasolie-Cursor")
 
 -- Pinentry do Bitwarden (rbw) e janelas pequenas flutuando centralizadas
 for _, cls in ipairs({ "^pinentry-qt$", "^org.pulseaudio.pavucontrol$", "^blueman-manager$", "^nm-connection-editor$" }) do

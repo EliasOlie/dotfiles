@@ -66,7 +66,12 @@ echo "==> Preferências GTK (gsettings)"
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark'
 gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
-gsettings set org.gnome.desktop.interface cursor-theme 'Bibata-Modern-Classic'
+# Cursor Eliasolie (Bibata Modern com borda lima), gerado a partir do fonte do Bibata
+if [[ ! -d $HOME/.local/share/icons/Eliasolie-Cursor ]]; then
+  tmp=$(mktemp -d); git clone -q --depth 1 https://github.com/ful1e5/Bibata_Cursor.git "$tmp/bibata" \
+    && python3 "$REPO/rice/gen-cursor.py" "$tmp/bibata" >/dev/null; rm -rf "$tmp"
+fi
+gsettings set org.gnome.desktop.interface cursor-theme 'Eliasolie-Cursor'
 gsettings set org.gnome.desktop.interface font-name 'Archivo 10'
 gsettings set org.gnome.desktop.interface monospace-font-name 'JetBrainsMono Nerd Font 10'
 

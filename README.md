@@ -53,7 +53,7 @@ hyprctl reload
 | `home/.config/quickshell/` | widgets do desktop: relógio, apps, agenda, mídia e sistema (Quickshell) |
 | `system/sddm/eliasolie/` | tema da tela de login (SDDM, Qt6) |
 | `brave-theme/` | tema do Brave na paleta: `brave://extensions` → modo desenvolvedor → **Carregar sem compactação** → esta pasta |
-| `packages-aur.txt` | pacotes do AUR (cursor Bibata) |
+| `packages-aur.txt` | pacotes do AUR (cursor Eliasolie (Bibata com borda lima)) |
 | `rice/gen-wallpaper.py` | gera o PNG do wallpaper (usado no bloqueio e no SDDM) em qualquer resolução: `python3 rice/gen-wallpaper.py saida.png 2560 1440` (`--dot` inclui o ponto lima) |
 
 ## Atalhos
