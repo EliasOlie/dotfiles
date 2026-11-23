@@ -12,12 +12,16 @@ Item {
     readonly property int cellH: step * 2
     function snap(v) { return Math.round(v / step) * step }
 
-    // Área: entre o painel de atalhos (esquerda) e a borda direita
-    readonly property int gridX: snap(width * 0.2)
-    readonly property int gridY: snap(height * 0.26)
+    // Composição (título + grade + legenda | lista) centralizada na tela,
+    // com tudo encaixado na grade de pontos de 40 px
     readonly property int gridW: cellW * 7
+    readonly property int listW: step * 12
+    readonly property int totalW: gridW + step * 2 + listW
+    readonly property int rows: Math.ceil(cells.length / 7)
+    readonly property int blockH: step * 4 + rows * cellH + step          // título + semanas + legenda
+    readonly property int gridX: snap((width - totalW) / 2)
+    readonly property int gridY: Math.max(step * 3, snap((height - blockH) / 2) - step) + step * 4
     readonly property int listX: gridX + gridW + step * 2
-    readonly property int listW: width - listX - 56
 
     property int viewYear: AgendaData.today.getFullYear()
     property int viewMonth: AgendaData.today.getMonth()

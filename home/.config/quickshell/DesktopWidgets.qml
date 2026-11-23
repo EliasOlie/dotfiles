@@ -35,7 +35,8 @@ PanelWindow {
     readonly property bool pinRight: DeskState.pinned(mon, "right")
     property bool peekLeft: false
     property bool peekRight: false
-    readonly property bool showLeft: !compact || peekLeft || pinLeft
+    // com a agenda grande aberta, os dois lados recolhem em etiquetas (ela ocupa o centro)
+    readonly property bool showLeft: (!compact && !bigAgenda) || peekLeft || pinLeft
     readonly property bool showRight: (!compact && !bigAgenda) || peekRight || pinRight
     onCompactChanged: { peekLeft = false; peekRight = false }
     // Fecha só se o mouse não estiver na etiqueta, no bloco nem no alfinete (evita piscar)
@@ -166,7 +167,7 @@ PanelWindow {
             anchors { left: parent.left; top: parent.top; leftMargin: desk.edge; topMargin: desk.edge }
             text: "atalhos"
             label.text: "+  ATALHOS  \uf078"
-            opacity: (desk.compact ? 1 : 0) * desk.stage(1)    // fica por baixo do bloco aberto
+            opacity: (desk.compact || desk.bigAgenda ? 1 : 0) * desk.stage(1)    // fica por baixo do bloco aberto
             visible: opacity > 0
             Behavior on opacity { NumberAnimation { duration: 140 } }
             onHoveredChanged: hovered ? (desk.peekLeft = true, closeLeft.stop()) : closeLeft.restart()
@@ -178,11 +179,11 @@ PanelWindow {
             visible: opacity > 0
             Behavior on opacity { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } }
             transform: Translate { y: (desk.showLeft ? 0 : -6) + (desk.intro >= 1 ? 0 : 14); Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
-            HoverHandler { id: leftHover; onHoveredChanged: if (desk.compact) hovered ? closeLeft.stop() : closeLeft.restart() }
+            HoverHandler { id: leftHover; onHoveredChanged: if (desk.compact || desk.bigAgenda) hovered ? closeLeft.stop() : closeLeft.restart() }
             Pin {
                 id: leftPin
                 anchors { right: parent.right; top: parent.top; margins: 12 }
-                visible: desk.compact
+                visible: desk.compact || desk.bigAgenda
                 pinned: desk.pinLeft
                 onToggled: DeskState.togglePin(desk.mon, "left")
             }
