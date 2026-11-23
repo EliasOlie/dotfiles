@@ -7,7 +7,7 @@ O Quickshell só roda isto quando há música tocando e o desktop está à mostr
 """
 import array, math, os, signal, subprocess, sys
 
-RATE, CHUNK = 11025, 368              # ~33 ms por leitura
+RATE, CHUNK = 11025, 459              # ~42 ms por leitura (24 por segundo: suficiente pro olho)
 sink = subprocess.run(["pactl", "get-default-sink"], capture_output=True, text=True).stdout.strip()
 p = subprocess.Popen(["parec", "-d", sink + ".monitor", "--format=s16le", f"--rate={RATE}",
                       "--channels=1", "--latency-msec=30"], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)

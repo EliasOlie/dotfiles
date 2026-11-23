@@ -1,9 +1,16 @@
 import QtQuick
 import Quickshell
 import Quickshell.Wayland
+import Quickshell.Hyprland
 
-// Wallpaper vivo: fundo void + grade de pontos sutil. Perto do mouse,
-// os pontos acendem em lima (substitui o hyprpaper).
+// Wallpaper vivo, desenhado pela GPU (shaders/wallpaper.frag): fundo void +
+// grade de pontos. Os pontos acendem em lima perto do mouse, numa onda a partir
+// do clique, no ritmo da música e, de vez em quando, sozinhos (como estrelas).
+// Em descanso (Idle.qml: 2 min sem mexer em nada) eles formam a hora e acendem
+// sozinhos, como estrelas.
+// Custo: zero com janelas na frente; em uso, só redesenha quando algo muda
+// (mouse, clique, música). A animação contínua (estrelas, 15 quadros/s) roda
+// só em descanso: cada quadro custa CPU no Qt, e em uso isso dava ~6-9%.
 PanelWindow {
     id: wall
     required property var modelData
@@ -19,20 +26,19 @@ PanelWindow {
     readonly property real radius: 170      // alcance do brilho em volta do mouse
     readonly property bool here: Pointer.inside && Pointer.screen === modelData.name
 
+    // Desktop deste monitor à mostra? (sem janelas no workspace ativo)
+    readonly property var hmon: Hyprland.monitorFor(modelData)
+    readonly property bool shown: !!hmon && !!hmon.activeWorkspace && hmon.activeWorkspace.toplevels.values.length === 0
+
     // Intensidade do brilho: acende ao entrar, apaga suave ao sair
     property real amount: here ? 1 : 0
     Behavior on amount { NumberAnimation { duration: 450; easing.type: Easing.OutCubic } }
-    onAmountChanged: glow.requestPaint()
+    property point glowAt: Qt.point(-1000, -1000)
 
-    // Último ponto conhecido (mantém o brilho no lugar enquanto apaga)
-    property real gx: -1000
-    property real gy: -1000
-    // Onda do clique: um anel de pontos acesos que cresce e some
+    // Onda do clique
     readonly property real rippleMax: 560
-    property real rx: 0
-    property real ry: 0
+    property point rippleAt: Qt.point(0, 0)
     property real rr: -1                 // raio atual (-1 = sem onda)
-    onRrChanged: glow.requestPaint()
     NumberAnimation { id: rippleAnim; target: wall; property: "rr"; from: 0; to: wall.rippleMax; duration: 950; easing.type: Easing.OutQuad
         onFinished: wall.rr = -1 }
 
@@ -40,91 +46,78 @@ PanelWindow {
         target: Pointer
         function onRipple(screen, x, y) {
             if (screen !== wall.modelData.name) return
-            wall.rx = x; wall.ry = y; rippleAnim.restart()
+            wall.rippleAt = Qt.point(x, y); rippleAnim.restart()
         }
-        function onXChanged() { if (wall.here) { wall.gx = Pointer.x; glow.requestPaint() } }
-        function onYChanged() { if (wall.here) { wall.gy = Pointer.y; glow.requestPaint() } }
+        function onXChanged() { if (wall.here) wall.glowAt = Qt.point(Pointer.x, Pointer.y) }
+        function onYChanged() { if (wall.here) wall.glowAt = Qt.point(Pointer.x, Pointer.y) }
     }
 
-    // Grade base: desenhada uma vez (e ao redimensionar)
-    Canvas {
-        id: grid
-        anchors.fill: parent
-        renderStrategy: Canvas.Cooperative
-        onWidthChanged: requestPaint()
-        onHeightChanged: requestPaint()
-        onPaint: {
-            const ctx = getContext("2d")
-            ctx.clearRect(0, 0, width, height)
-            ctx.fillStyle = "#22221F"
-            for (let y = 0; y < height; y += wall.step)
-                for (let x = 0; x < width; x += wall.step)
-                    ctx.fillRect(x, y, 1, 1)
-        }
-    }
+    // Relógio das estrelas: só em descanso, com o desktop deste monitor à mostra
+    property real time: 0
+    Timer { interval: 66; repeat: true; running: wall.shown && Idle.resting; onTriggered: wall.time += 0.066 }
 
-    // Pulso da música: pontos lima mais fortes no centro, desenhados UMA vez;
-    // o que muda a cada batida é só a opacidade (barato, feito pela GPU)
-    Canvas {
-        id: pulse
-        anchors.fill: parent
-        renderStrategy: Canvas.Cooperative
-        opacity: AudioLevel.level * 0.6
-        visible: opacity > 0.01
-        onWidthChanged: requestPaint()
-        onHeightChanged: requestPaint()
-        onPaint: {
-            const ctx = getContext("2d")
-            ctx.clearRect(0, 0, width, height)
-            const cx = width / 2, cy = height / 2, R = Math.hypot(cx, cy)
-            for (let y = 0; y < height; y += wall.step)
-                for (let x = 0; x < width; x += wall.step) {
-                    const t = Math.pow(1 - Math.hypot(x - cx, y - cy) / R, 1.8)
-                    ctx.fillStyle = Qt.rgba(200 / 255, 240 / 255, 49 / 255, 0.08 + 0.9 * t)
-                    const size = 1 + Math.round(t)
-                    ctx.fillRect(x - (size - 1) / 2, y - (size - 1) / 2, size, size)
-                }
-        }
-    }
+    // Modo descanso: sobe devagar, some rápido ao mexer
+    property real rest: Idle.resting && wall.shown ? 1 : 0
+    Behavior on rest { NumberAnimation { duration: wall.rest > 0.5 ? 400 : 2200; easing.type: Easing.InOutCubic } }
 
-    // Camada do brilho: só os pontos dentro do raio são redesenhados
+    // Hora em matriz de pontos: textura com 1 pixel por ponto da grade
+    readonly property int cols: Math.ceil(width / step) + 1
+    readonly property int rows: Math.ceil(height / step) + 1
+    readonly property var font5x7: ({
+        "0": ["01110","10001","10011","10101","11001","10001","01110"],
+        "1": ["00100","01100","00100","00100","00100","00100","01110"],
+        "2": ["01110","10001","00001","00010","00100","01000","11111"],
+        "3": ["11111","00010","00100","00010","00001","10001","01110"],
+        "4": ["00010","00110","01010","10010","11111","00010","00010"],
+        "5": ["11111","10000","11110","00001","00001","10001","01110"],
+        "6": ["00110","01000","10000","11110","10001","10001","01110"],
+        "7": ["11111","00001","00010","00100","01000","01000","01000"],
+        "8": ["01110","10001","10001","01110","10001","10001","01110"],
+        "9": ["01110","10001","10001","01111","00001","00010","01100"],
+        ":": ["0","0","1","0","1","0","0"]
+    })
     Canvas {
-        id: glow
-        anchors.fill: parent
+        id: dotClock
+        width: wall.cols; height: wall.rows
         renderStrategy: Canvas.Cooperative
         onPaint: {
             const ctx = getContext("2d")
-            ctx.clearRect(0, 0, width, height)
-            const s0 = wall.step
-            // Onda do clique (anel com ~44 px de espessura, apaga conforme cresce)
-            if (wall.rr >= 0) {
-                const W = 44, R = wall.rr, fade = 1 - R / wall.rippleMax
-                const x0 = Math.max(0, Math.floor((wall.rx - R - W) / s0) * s0), x1 = Math.min(width, wall.rx + R + W)
-                const y0 = Math.max(0, Math.floor((wall.ry - R - W) / s0) * s0), y1 = Math.min(height, wall.ry + R + W)
-                for (let y = y0; y <= y1; y += s0)
-                    for (let x = x0; x <= x1; x += s0) {
-                        const k = 1 - Math.abs(Math.hypot(x - wall.rx, y - wall.ry) - R) / W
-                        if (k <= 0) continue
-                        const t = k * fade
-                        const size = 1 + 2 * t
-                        ctx.fillStyle = Qt.rgba(200 / 255, 240 / 255, 49 / 255, 0.2 + 0.8 * t)
-                        ctx.fillRect(x - (size - 1) / 2, y - (size - 1) / 2, size, size)
-                    }
-            }
-            if (wall.amount <= 0.01) return
-            const s = wall.step, R = wall.radius
-            const x0 = Math.max(0, Math.floor((wall.gx - R) / s) * s), x1 = Math.min(width,  wall.gx + R)
-            const y0 = Math.max(0, Math.floor((wall.gy - R) / s) * s), y1 = Math.min(height, wall.gy + R)
-            for (let y = y0; y <= y1; y += s) {
-                for (let x = x0; x <= x1; x += s) {
-                    const d = Math.hypot(x - wall.gx, y - wall.gy)
-                    if (d > R) continue
-                    const t = Math.pow(1 - d / R, 1.6) * wall.amount
-                    const size = 1 + 2 * t
-                    ctx.fillStyle = Qt.rgba(200 / 255, 240 / 255, 49 / 255, 0.15 + 0.85 * t)
-                    ctx.fillRect(x - (size - 1) / 2, y - (size - 1) / 2, size, size)
-                }
+            ctx.fillStyle = "#000000"; ctx.fillRect(0, 0, width, height)
+            ctx.fillStyle = "#ffffff"
+            const txt = Qt.formatTime(new Date(), "HH:mm")
+            const glyphs = txt.split("").map(ch => wall.font5x7[ch])
+            const w = glyphs.reduce((a, g) => a + g[0].length, 0) + glyphs.length - 1
+            let x = Math.floor((wall.cols - w) / 2)
+            const y = Math.floor((wall.rows - 7) / 2) - 1
+            for (const g of glyphs) {
+                for (let r = 0; r < 7; r++)
+                    for (let k = 0; k < g[r].length; k++)
+                        if (g[r][k] === "1") ctx.fillRect(x + k, y + r, 1, 1)
+                x += g[0].length + 1
             }
         }
+        Component.onCompleted: requestPaint()
+    }
+    SystemClock { id: clock; precision: SystemClock.Minutes; onDateChanged: dotClock.requestPaint() }
+    onRestChanged: if (rest > 0 && rest < 0.05) dotClock.requestPaint()
+
+    ShaderEffect {
+        anchors.fill: parent
+        fragmentShader: Qt.resolvedUrl("shaders/wallpaper.frag.qsb")
+        property real cellStep: wall.step
+        property real glowAmount: wall.amount
+        property real glowRadius: wall.radius
+        property point res: Qt.point(width, height)
+        property point mouse: wall.glowAt
+        property point ripple: wall.rippleAt
+        property real rippleR: wall.rr
+        property real rippleMax: wall.rippleMax
+        property real pulse: wall.shown ? AudioLevel.level : 0     // só no monitor com o desktop à mostra
+        property real time: wall.time
+        property real twinkle: Idle.resting ? 1 : 0
+        property real rest: wall.rest
+        property point grid: Qt.point(wall.cols, wall.rows)
+        // hideSource: a textura vai pro shader e o canvas some da tela
+        property var matrix: ShaderEffectSource { sourceItem: dotClock; hideSource: true; smooth: false }
     }
 }

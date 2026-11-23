@@ -130,7 +130,8 @@ PanelWindow {
     Item {
         id: content
         anchors.fill: parent
-        opacity: desk.empty ? 1 : 0
+        // em descanso (Idle.qml) os widgets quase somem: a hora fica com os pontos do wallpaper
+        opacity: desk.empty ? (Idle.resting ? 0.06 : 1) : 0
         visible: opacity > 0
         Behavior on opacity { NumberAnimation { duration: 180; easing.type: Easing.OutCubic } }
 
