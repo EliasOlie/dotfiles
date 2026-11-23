@@ -20,7 +20,7 @@ Item {
     readonly property int rows: Math.ceil(cells.length / 7)
     readonly property int blockH: step * 4 + rows * cellH + step          // título + semanas + legenda
     readonly property int gridX: snap((width - totalW) / 2)
-    readonly property int gridY: Math.max(step * 3, snap((height - blockH) / 2) - step) + step * 4
+    readonly property int gridY: Math.max(step * 3, snap((height - blockH) / 2) - step * 2) + step * 4   // um pouco acima do centro
     readonly property int listX: gridX + gridW + step * 2
 
     property int viewYear: AgendaData.today.getFullYear()
