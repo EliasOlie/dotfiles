@@ -16,6 +16,7 @@ Singleton {
     property var pins: ({})
     property var agenda: ({})
     property bool focus: false
+    signal newEventOn(string monitor)       // abre o formulário "Novo evento" nesse monitor
 
     function isCompact(name) { return root.compact[name] === true }
     function agendaOpen(name) { return root.agenda[name] === true }
@@ -56,6 +57,8 @@ Singleton {
             if (m) root.toggle(m.name)
         }
         function setFocus(on: bool): void { root.focus = on }
+        // Formulário "Novo evento" da agenda no monitor com foco
+        function newEvent(): void { const m = Hyprland.focusedMonitor; if (m) root.newEventOn(m.name) }
         // Abre/fecha a agenda grande no monitor com foco; abrindo com janelas
         // na frente, vai para o desktop (Super+D) para ela aparecer
         function toggleAgenda(): void {

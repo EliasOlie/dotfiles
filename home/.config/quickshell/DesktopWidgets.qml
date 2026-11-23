@@ -42,6 +42,13 @@ PanelWindow {
     Timer { id: closeLeft;  interval: 260; onTriggered: if (!leftTag.hovered && !leftHover.hovered && !leftPin.hovered) desk.peekLeft = false }
     Timer { id: closeRight; interval: 260; onTriggered: if (!rightTag.hovered && !rightHover.hovered && !rightPin.hovered) desk.peekRight = false }
 
+    // ------------------------------------------------ "Novo evento" (agenda)
+    AgendaForm { id: newEventForm; screen: desk.modelData }
+    Connections {
+        target: DeskState
+        function onNewEventOn(monitor) { if (monitor === desk.mon) newEventForm.openFor(0) }
+    }
+
     // ------------------------------------------------ voo do relógio
     // Entrando no desktop: o relógio sai do centro da waybar e cresce até o canto;
     // saindo: encolhe e volta para a barra (por cima das janelas, numa camada Overlay).
@@ -331,6 +338,7 @@ PanelWindow {
         // =============================================== CENTRO: agenda do wallpaper (Super+A, por monitor)
         AgendaWall {
             anchors.fill: parent
+            onNewEvent: key => newEventForm.openFor(key)
             opacity: desk.bigAgenda ? desk.stage(3) : 0
             visible: opacity > 0.01
             Behavior on opacity { NumberAnimation { duration: 260; easing.type: Easing.OutCubic } }

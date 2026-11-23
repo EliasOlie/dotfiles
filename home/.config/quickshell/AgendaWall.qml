@@ -22,6 +22,7 @@ Item {
     property int viewYear: AgendaData.today.getFullYear()
     property int viewMonth: AgendaData.today.getMonth()
     property int selectedKey: 0
+    signal newEvent(int key)          // "+ NOVO EVENTO": abre o formulário no dia escolhido
     readonly property var listed: selectedKey ? AgendaData.onDay(selectedKey, 6) : AgendaData.upcoming(6)
 
     readonly property var cells: {
@@ -66,7 +67,7 @@ Item {
             delegate: Text {
                 required property var modelData
                 text: modelData.t
-                color: navMouse.containsMouse ? Theme.signal : Theme.statik
+                color: navMouse.containsMouse || modelData.n === 9 ? Theme.signal : Theme.statik
                 font.family: Theme.mono; font.pixelSize: 12; font.letterSpacing: 2
                 MouseArea {
                     id: navMouse
@@ -74,6 +75,7 @@ Item {
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
+                        if (modelData.n === 9) { wall.newEvent(wall.selectedKey); return }
                         if (modelData.n === 0) {
                             wall.viewYear = AgendaData.today.getFullYear()
                             wall.viewMonth = AgendaData.today.getMonth()
