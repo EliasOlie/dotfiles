@@ -52,3 +52,8 @@ zoxide
 fzf
 git
 noto-fonts-emoji
+hyprpicker
+tesseract
+tesseract-data-por
+tesseract-data-eng
+wf-recorder

@@ -78,11 +78,16 @@ hyprctl reload
 | `Super+Ctrl+F9..F12` | mover workspace para o monitor da esquerda/direita/cima/baixo |
 | `Super+Alt+V` / `E` / `C` | clipboard / emoji / calculadora |
 | `Super+S` / `Super+Ctrl+S` | busca na web / alternar janelas |
-| `Super+Shift+O` | abrir projeto (repositórios git em `~/work`) num terminal |
+| `Super+Shift+O` | abrir projeto (repositórios git em `~/work`): Enter terminal · `Alt+C` com o Claude · `Alt+N` no Neovim |
 | `Super+Alt+D` | desktop compacto no monitor atual: esconde atalhos e painéis (etiquetas `+ ⌄` abrem ao passar o mouse); fica salvo |
 | `Super+A` | agenda grande no centro do desktop (monitor atual; fica salvo). Com janelas na frente, vai pro desktop |
 | `Super+Shift+A` | agenda: novo evento (EliasOlie, ConectaMe ou Pessoal) |
 | `Super+O` / `Super+Ctrl+O` | visão geral das janelas: monitor em foco / todos os monitores |
+| `Super+Shift+J` | Janus: registrar decisão/nota (texto → grupo) |
+| `Super+Shift+C` | conta-gotas: copia a cor de qualquer pixel em #hex |
+| `Super+Shift+T` | copiar texto de uma área da tela (OCR local, pt+en) |
+| `Super+Shift+R` | gravar tela: área (ou Esc = monitor inteiro); de novo para parar · `~/Vídeos/gravacoes` |
+| `Super+Ctrl+P` | fixar janela por cima de tudo (em todos os workspaces) |
 | `Super+H` | cola de atalhos: lista todos os keybinds e o que fazem (lê do Hyprland, sempre atualizada) |
 | `Super+J` | buscar no Janus (rofi) |
 | `Super+Alt+F` | modo foco: 25 min com "não perturbe" (de novo encerra) |
@@ -123,6 +128,8 @@ Os widgets ficam sobre o wallpaper (abaixo das janelas) e **só aparecem quando 
 - **Entrada em cascata:** na primeira vez que o desktop aparece (login ou reinício do Quickshell), o relógio voa da barra e os blocos entram um a um.
 - **Wallpaper na GPU** (`quickshell/shaders/wallpaper.frag`, compilado com `qsb` em `.frag.qsb`): grade, brilho do mouse, onda do clique e pulso da música num shader só. Em uso não anima nada sozinho (cada quadro custa CPU no Qt); com o desktop à mostra fica em ~3% de CPU.
 - **Visão geral** (`quickshell/Overview.qml`, `Super+O` no monitor em foco, `Super+Ctrl+O` em todos): cada workspace com janelas vira uma miniatura do monitor com a imagem real das janelas na posição delas; se há janela maximizada/tela cheia (que esconde as outras), as janelas são espalhadas lado a lado. Workspaces especiais (ex.: terminal suspenso) aparecem como "ESCONDIDAS". Clique na janela vai pra ela, no workspace vai pra ele, Esc fecha. As imagens são capturadas uma vez ao abrir (sem custo contínuo).
+- **Picture-in-picture do Brave:** abre pequeno (480×270), fixo por cima de tudo, no canto inferior direito (regra em `look.lua`).
+- **Gravação de tela:** `● REC 01:23` em coral na waybar enquanto grava (`rec.sh`, H.264 pela GPU Intel quando dá).
 - **Modo descanso** (`quickshell/Idle.qml`, 2 min sem mexer em nada, respeita vídeo em tela cheia): os pontos da grade formam a hora em matriz no centro, estrelas acendem e apagam pela grade e os widgets quase somem. Mexeu, volta.
 - **Wallpaper que reage:** clique no fundo do desktop solta uma onda pelos pontos; com música tocando (MPRIS) e o desktop à mostra, os pontos pulsam em lima no ritmo dos graves (`hypr/scripts/audio-level.py`, via `parec`, sem cava).
 - **Indicador de volume/brilho/microfone:** card no estilo do site que sobe do rodapé, só no monitor com foco (`quickshell/Osd.qml`; `qs ipc call osd popup volume 45 false`). O `osd.sh` cai numa notificação se o Quickshell não estiver rodando.
@@ -138,7 +145,7 @@ Os widgets ficam sobre o wallpaper (abaixo das janelas) e **só aparecem quando 
 - **Clima (Serra Talhada):** na linha da data, via Open-Meteo (sem chave), a cada 30 min. Outra cidade: `lat`/`lon` em `quickshell/Weather.qml`.
 - **Backup:** `■ BACKUP 22H` no rodapé e na tela de bloqueio (`hypr/scripts/backup-status.sh`, lê `RESTIC_*` do `~/.zshrc.local`, cache de 30 min). Coral se passar de 26 h.
 - **Modo foco (`Super+Alt+F`):** módulo `FOCO` na waybar. Clique = 25 min com "não perturbe"; rolar = ±5 min; no fim, notificação e DND volta como estava (`hypr/scripts/focus.sh`, timer do systemd).
-- **Janus no rofi (`Super+J`):** `hypr/scripts/janus.py` fala com o Janus pelo MCP (stdio). Lista os artigos (o rofi filtra), Enter em texto livre busca no Janus (inclui decisões), e o item abre num kitty flutuante. Caminho: `$JANUS_MCP` (padrão `~/work/janus/scripts/mcp.sh`).
+- **Janus no rofi (`Super+J`; `Alt+T` tudo · `Alt+W` só wikis · `Alt+D` só decisões; `Super+Shift+J` registra decisão):** `hypr/scripts/janus.py` fala com o Janus pelo MCP (stdio). Lista os artigos (o rofi filtra), Enter em texto livre busca no Janus (inclui decisões), e o item abre num kitty flutuante. Caminho: `$JANUS_MCP` (padrão `~/work/janus/scripts/mcp.sh`).
 - **Utilitários rofi** (`hypr/scripts/rofi-tools.sh`): clipboard com miniatura de imagens (`alt d` apaga, `alt shift d` limpa), emoji (precisa `noto-fonts-emoji`) e calculadora (Enter copia).
 - **Tela de bloqueio:** música tocando + linha de status (VPS e backup) via `hypr/scripts/lock-status.sh`.
 - **Boot rápido e login sem Xorg** (`bash system/boot-tweaks.sh`, pede a senha de administrador): systemd-boot com `timeout 0` (segure Espaço ao ligar para ver o menu) e SDDM em Wayland sobre o weston (`system/sddm.conf.d/20-wayland.conf`, teclado ABNT2 e cursor em `system/sddm-wayland/sddm-weston.ini`). Desfazer o login Wayland: `bash system/boot-tweaks.sh --undo-sddm` (de um TTY, se a tela de login não abrir).

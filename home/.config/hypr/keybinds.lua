@@ -271,6 +271,21 @@ bind(mainMod .. " + SHIFT + A", sh("qs ipc call desktop newEvent"), "agenda: nov
 bind(mainMod .. " + A",         sh("qs ipc call desktop toggleAgenda"), "agenda grande no centro (monitor atual)")
 bind(mainMod .. " + O",        sh("qs ipc call overview toggle"),    "visão geral das janelas (monitor em foco)")
 bind(mainMod .. " + CTRL + O", sh("qs ipc call overview toggleAll"), "visão geral das janelas (todos os monitores)")
+-- Ferramentas rápidas
+bind(mainMod .. " + SHIFT + J", sh(scripts .. "/janus.py registrar"), "Janus: registrar decisão/nota")
+bind(mainMod .. " + SHIFT + C", sh(scripts .. "/colorpick.sh"),       "conta-gotas (copia a cor #hex)")
+bind(mainMod .. " + SHIFT + T", sh(scripts .. "/ocr.sh"),             "copiar texto de uma área da tela")
+bind(mainMod .. " + SHIFT + R", sh(scripts .. "/rec.sh"),             "gravar tela (liga/desliga)")
+
+-- Fixar janela por cima de tudo (aparece em todos os workspaces); flutua se precisar
+function PinToggle()
+    local w = hl.get_active_window()
+    if not w then return end
+    if not w.floating then hl.dispatch(hl.dsp.window.float({ action = "toggle" })) end
+    hl.dispatch(hl.dsp.window.pin())
+end
+bind(mainMod .. " + CTRL + P", PinToggle, "fixar janela por cima de tudo (liga/desliga)")
+
 bind(mainMod .. " + H",         sh(scripts .. "/keybinds.py"),    "mostrar todos os atalhos")
 bind(mainMod .. " + J",         sh(scripts .. "/janus.py"),       "buscar no Janus")
 bind(mainMod .. " + ALT + F",   sh(scripts .. "/focus.sh toggle"), "modo foco (25 min, não perturbe)")

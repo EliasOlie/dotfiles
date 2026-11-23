@@ -76,3 +76,6 @@ tooltip {
 #custom-focus.off { color: #8A8A84; }
 #custom-focus.on  { color: #050505; background: #C8F031; font-weight: bold; }
 
+
+/* Gravando: coral cheio */
+#custom-rec.on { color: #050505; background: #FF5A4E; font-weight: bold; padding: 0 10px; }

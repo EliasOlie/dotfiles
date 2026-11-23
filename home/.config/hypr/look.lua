@@ -76,6 +76,10 @@ end
 -- Leitor do Janus (Super+J): flutuante, centralizado, confortável para ler
 hl.window_rule({ name = "janus-view", match = { class = "^janus-view$" }, float = true, center = true, size = "1000 720" })
 
+-- Picture-in-picture do Brave/Chromium: pequeno, fixo por cima de tudo, no canto
+hl.window_rule({ name = "pip", match = { title = "^(Picture.in.[Pp]icture|Imagem em imagem|Picture-in-Picture)$" },
+    float = true, pin = true, size = "480 270", move = "monitor_w-500 monitor_h-290", keep_aspect_ratio = true })
+
 -- Autostart do visual
 hl.on("hyprland.start", function()
     hl.exec_cmd("waybar")
