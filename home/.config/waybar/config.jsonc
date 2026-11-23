@@ -14,8 +14,6 @@
   "custom/focus": {
     "exec": "~/.config/hypr/scripts/focus.sh waybar",
     "return-type": "json",
-    "interval": 1,
-    "signal": 9,
     "on-click": "~/.config/hypr/scripts/focus.sh toggle",
     "on-scroll-up": "~/.config/hypr/scripts/focus.sh add 5",
     "on-scroll-down": "~/.config/hypr/scripts/focus.sh add -5"
@@ -87,9 +85,9 @@
   "tray": { "icon-size": 14, "spacing": 8 },
 
   "custom/gpu": {
-    "exec": "nvidia-smi --query-gpu=utilization.gpu,temperature.gpu --format=csv,noheader,nounits 2>/dev/null | awk -F', ' '{printf \"{\\\"text\\\":\\\"GPU %s%%\\\",\\\"tooltip\\\":\\\"MX250 · %s°C\\\"}\\n\", $1, $2}'",
+    "exec": "if [ \"$(cat /sys/bus/pci/devices/0000:02:00.0/power/runtime_status 2>/dev/null)\" != \"active\" ]; then echo '{\"text\":\"GPU off\",\"tooltip\":\"MX250 · suspensa\"}'; else nvidia-smi --query-gpu=utilization.gpu,temperature.gpu --format=csv,noheader,nounits 2>/dev/null | awk -F', ' '{printf \"{\\\"text\\\":\\\"GPU %s%%\\\",\\\"tooltip\\\":\\\"MX250 · %s°C\\\"}\\n\", $1, $2}'; fi",
     "return-type": "json",
-    "interval": 10
+    "interval": 15
   },
 
   "cpu":    { "format": "CPU {usage}%", "interval": 5 },

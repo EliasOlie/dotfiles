@@ -11,7 +11,7 @@ STATE="${XDG_RUNTIME_DIR:-/tmp}/focus"          # "<fim_epoch> <dnd_antes>"
 UNIT=eliasolie-focus
 DEFAULT=25
 
-refresh() { pkill -RTMIN+9 waybar 2>/dev/null; }
+refresh() { pkill -USR1 -f "focus.sh waybar" 2>/dev/null || true; }
 desk() { qs ipc call desktop setFocus "$1" >/dev/null 2>&1 || true; }   # foco compacta o desktop
 arm() {   # (re)agenda o fim para daqui a $1 segundos
     systemctl --user stop "$UNIT.timer" "$UNIT.service" 2>/dev/null
@@ -51,11 +51,18 @@ add)
     (( end < now + 60 )) && end=$(( now + 60 ))
     echo "$end $dnd" > "$STATE"; arm $(( end - now )); refresh ;;
 waybar)
-    if [[ -f $STATE ]]; then
-        read -r end _ < "$STATE"; left=$(( end - $(date +%s) )); (( left < 0 )) && left=0
-        printf '{"text":"FOCO %02d:%02d","class":"on","tooltip":"clique: encerrar · rolar: ±5 min"}\n' $((left/60)) $((left%60))
-    else
-        printf '{"text":"FOCO","class":"off","tooltip":"clique: %s min de foco (não perturbe ligado)"}\n' "$DEFAULT"
-    fi ;;
+    trap ':' USR1
+    while true; do
+        if [[ -f $STATE ]]; then
+            read -r end _ < "$STATE" 2>/dev/null || true
+            printf -v now '%(%s)T' -1
+            left=$(( ${end:-0} - now )); (( left < 0 )) && left=0
+            printf '{"text":"FOCO %02d:%02d","class":"on","tooltip":"clique: encerrar · rolar: ±5 min"}\n' $((left/60)) $((left%60))
+            sleep 1 & wait $! || true
+        else
+            printf '{"text":"FOCO","class":"off","tooltip":"clique: %s min de foco (não perturbe ligado)"}\n' "$DEFAULT"
+            sleep 300 & wait $! || true
+        fi
+    done ;;
 *) echo "uso: $0 start [min]|stop|toggle|add <min>|waybar" >&2; exit 1 ;;
 esac

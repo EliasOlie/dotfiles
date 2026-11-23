@@ -51,7 +51,9 @@ def main():
             if not data: sys.exit(1)                           # Hyprland saiu: waybar reinicia o script
             buf += data
             if b"\n" not in buf: continue
-            buf = buf.rsplit(b"\n", 1)[1]
+            lines, buf = buf.rsplit(b"\n", 1)
+            if not any(l.startswith((b"workspace>>", b"focusedmon>>", b"openwindow>>", b"closewindow>>", b"movewindow>>")) for l in lines.split(b"\n")):
+                continue
             time.sleep(0.03)                                   # deixa o Hyprland assentar o estado
             h = desktop_showing()
             if h == hidden: continue
