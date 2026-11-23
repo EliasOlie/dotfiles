@@ -82,6 +82,7 @@ hyprctl reload
 | `Super+Alt+D` | desktop compacto no monitor atual: esconde atalhos e painéis (etiquetas `+ ⌄` abrem ao passar o mouse); fica salvo |
 | `Super+A` | agenda grande no centro do desktop (monitor atual; fica salvo). Com janelas na frente, vai pro desktop |
 | `Super+Shift+A` | agenda: novo evento (EliasOlie, ConectaMe ou Pessoal) |
+| `Super+O` / `Super+Ctrl+O` | visão geral das janelas: monitor em foco / todos os monitores |
 | `Super+H` | cola de atalhos: lista todos os keybinds e o que fazem (lê do Hyprland, sempre atualizada) |
 | `Super+J` | buscar no Janus (rofi) |
 | `Super+Alt+F` | modo foco: 25 min com "não perturbe" (de novo encerra) |
@@ -121,6 +122,7 @@ Os widgets ficam sobre o wallpaper (abaixo das janelas) e **só aparecem quando 
 - **Relógio que voa:** o relógio da waybar (`custom/clock`, `hypr/scripts/bar-clock.py`) some quando o desktop do monitor está à mostra; o relógio grande sai do centro da barra crescendo até o canto e, ao abrir uma janela, encolhe de volta para a barra.
 - **Entrada em cascata:** na primeira vez que o desktop aparece (login ou reinício do Quickshell), o relógio voa da barra e os blocos entram um a um.
 - **Wallpaper na GPU** (`quickshell/shaders/wallpaper.frag`, compilado com `qsb` em `.frag.qsb`): grade, brilho do mouse, onda do clique e pulso da música num shader só. Em uso não anima nada sozinho (cada quadro custa CPU no Qt); com o desktop à mostra fica em ~3% de CPU.
+- **Visão geral** (`quickshell/Overview.qml`, `Super+O` no monitor em foco, `Super+Ctrl+O` em todos): cada workspace com janelas vira uma miniatura do monitor com a imagem real das janelas na posição delas; se há janela maximizada/tela cheia (que esconde as outras), as janelas são espalhadas lado a lado. Workspaces especiais (ex.: terminal suspenso) aparecem como "ESCONDIDAS". Clique na janela vai pra ela, no workspace vai pra ele, Esc fecha. As imagens são capturadas uma vez ao abrir (sem custo contínuo).
 - **Modo descanso** (`quickshell/Idle.qml`, 2 min sem mexer em nada, respeita vídeo em tela cheia): os pontos da grade formam a hora em matriz no centro, estrelas acendem e apagam pela grade e os widgets quase somem. Mexeu, volta.
 - **Wallpaper que reage:** clique no fundo do desktop solta uma onda pelos pontos; com música tocando (MPRIS) e o desktop à mostra, os pontos pulsam em lima no ritmo dos graves (`hypr/scripts/audio-level.py`, via `parec`, sem cava).
 - **Indicador de volume/brilho/microfone:** card no estilo do site que sobe do rodapé, só no monitor com foco (`quickshell/Osd.qml`; `qs ipc call osd popup volume 45 false`). O `osd.sh` cai numa notificação se o Quickshell não estiver rodando.

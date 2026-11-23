@@ -269,6 +269,8 @@ bind(mainMod .. " + SHIFT + O", sh(scripts .. "/projects.sh"), "abrir projeto (~
 bind(mainMod .. " + ALT + D",   sh("qs ipc call desktop toggleCompact"), "desktop compacto (monitor atual)")
 bind(mainMod .. " + SHIFT + A", sh("qs ipc call desktop newEvent"), "agenda: novo evento (EliasOlie, ConectaMe ou Pessoal)")
 bind(mainMod .. " + A",         sh("qs ipc call desktop toggleAgenda"), "agenda grande no centro (monitor atual)")
+bind(mainMod .. " + O",        sh("qs ipc call overview toggle"),    "visão geral das janelas (monitor em foco)")
+bind(mainMod .. " + CTRL + O", sh("qs ipc call overview toggleAll"), "visão geral das janelas (todos os monitores)")
 bind(mainMod .. " + H",         sh(scripts .. "/keybinds.py"),    "mostrar todos os atalhos")
 bind(mainMod .. " + J",         sh(scripts .. "/janus.py"),       "buscar no Janus")
 bind(mainMod .. " + ALT + F",   sh(scripts .. "/focus.sh toggle"), "modo foco (25 min, não perturbe)")

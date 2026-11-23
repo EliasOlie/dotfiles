@@ -13,6 +13,12 @@ ShellRoot {
         model: Quickshell.screens
         DesktopWidgets {}
     }
+    // Visão geral das janelas (Super+O / Super+Ctrl+O)
+    Variants {
+        model: Quickshell.screens
+        Overview {}
+    }
+    property var _overview: OverviewState
     // Indicador de volume/brilho (por cima de tudo, só no monitor com foco)
     Variants {
         model: Quickshell.screens
