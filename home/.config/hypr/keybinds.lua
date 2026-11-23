@@ -29,7 +29,7 @@ bind(mainMod .. " + B",      sh('xdg-open "https://"'),  "navegador padrão")
 
 bind(mainMod .. " + SHIFT + F", hl.dsp.window.fullscreen({ mode = "fullscreen" }), "tela cheia")
 -- Maximizar: janela lado a lado usa o "maximizado" do Hyprland; janela FLUTUANTE
--- (ex.: WhatsApp) cresce até preencher o monitor atual (respeitando a waybar) e
+-- (ex.: uma janela solta) cresce até preencher o monitor atual (respeitando a waybar) e
 -- volta ao tamanho anterior no segundo toque. Não manda "tela cheia" pro app
 -- (o Chromium tratava o maximizado de flutuante como F11) e não troca de monitor.
 FLOAT_MAX = FLOAT_MAX or {}
@@ -269,7 +269,6 @@ bind(mainMod .. " + SHIFT + O", sh(scripts .. "/projects.sh"), "abrir projeto (~
 bind(mainMod .. " + ALT + D",   sh("qs ipc call desktop toggleCompact"), "desktop compacto (monitor atual)")
 bind(mainMod .. " + SHIFT + A", sh("qs ipc call desktop newEvent"), "agenda: novo evento (EliasOlie, ConectaMe ou Pessoal)")
 bind(mainMod .. " + A",         sh("qs ipc call desktop toggleAgenda"), "agenda grande no centro (monitor atual)")
-bind(mainMod .. " + SHIFT + W", sh(scripts .. "/whatsapp.sh menu"), "WhatsApp: menu das 3 contas (não lidas)")
 bind(mainMod .. " + H",         sh(scripts .. "/keybinds.py"),    "mostrar todos os atalhos")
 bind(mainMod .. " + J",         sh(scripts .. "/janus.py"),       "buscar no Janus")
 bind(mainMod .. " + ALT + F",   sh(scripts .. "/focus.sh toggle"), "modo foco (25 min, não perturbe)")

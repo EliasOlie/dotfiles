@@ -116,11 +116,15 @@ Card {
         onTriggered: { agenda.today = new Date(); agendaFile.reload() }
     }
 
-    // "+ EVENTO" no canto do card: abre o formulário (no dia clicado, ou hoje)
+    // "+ NOVO" na linha do mês: abre o formulário (no dia clicado, ou hoje)
     signal newEvent(int key)
+    // na linha do mês, encostado à direita (mês à esquerda · NOVO à direita)
+    // (parent: o card em si — filhos comuns caem na área de conteúdo, abaixo do cabeçalho)
     Badge {
-        anchors { right: parent.right; top: parent.top; margins: 18 }
-        text: "+ evento"
+        parent: agenda
+        anchors { right: parent.right; rightMargin: agenda.pad; top: parent.top; topMargin: agenda.pad + 20 }
+        text: "+ novo"
+        implicitHeight: 24
         onClicked: agenda.newEvent(agenda.selectedKey)
     }
 

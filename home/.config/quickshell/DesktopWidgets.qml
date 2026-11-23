@@ -47,7 +47,10 @@ PanelWindow {
     AgendaForm { id: newEventForm; screen: desk.modelData }
     Connections {
         target: DeskState
-        function onNewEventOn(monitor) { if (monitor === desk.mon) newEventForm.openFor(0) }
+        function onNewEventOn(monitor) {        // Super+Shift+A alterna (abre / fecha)
+            if (monitor !== desk.mon) return
+            if (newEventForm.shown) newEventForm.close(); else newEventForm.openFor(0)
+        }
     }
 
     // ------------------------------------------------ voo do relógio

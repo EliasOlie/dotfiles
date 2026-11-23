@@ -7,7 +7,7 @@ import Quickshell.Wayland
 // (agenda EliasOlie / ConectaMe / Pessoal, título, data, início, fim, local,
 // descrição, Meet). Envia com `agenda-new` (POST /api/widget/events, mesmas
 // regras do painel) e atualiza a agenda local na hora.
-// Abre por cima de tudo com o teclado preso nele; Esc fecha, Ctrl+Enter cria.
+// Abre por cima de tudo (sem prender o foco); Esc fecha, Ctrl+Enter cria.
 PanelWindow {
     id: form
     anchors { left: true; right: true; top: true; bottom: true }
@@ -15,7 +15,9 @@ PanelWindow {
     color: "transparent"
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.namespace: "eliasolie-agenda-form"
-    WlrLayershell.keyboardFocus: shown ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
+    // OnDemand (não Exclusive): o teclado vem pro formulário, mas dá pra clicar em
+    // outra janela/monitor e voltar (Exclusive prendia o foco e travava os monitores)
+    WlrLayershell.keyboardFocus: shown ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
     visible: shown || card.opacity > 0.01
 
     property bool shown: false
