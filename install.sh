@@ -42,11 +42,18 @@ done
 [ -f "$HOME/.zshrc.local" ] || { umask 077; echo "# Segredos e ajustes desta máquina (fora do git)" > "$HOME/.zshrc.local"; }
 
 echo "==> Links em \$HOME"
+# Pastas linkadas inteiras (o Neovim grava o nvim-pack-lock.json dentro da própria config)
+for d in .config/nvim; do
+  if [ "$(readlink -f "$HOME/$d")" != "$REPO/home/$d" ]; then
+    [ -e "$HOME/$d" ] && mv "$HOME/$d" "$HOME/$d.bak-$STAMP"
+    mkdir -p "$(dirname "$HOME/$d")"; ln -sfn "$REPO/home/$d" "$HOME/$d"; echo "   ~/$d/"
+  fi
+done
 while IFS= read -r -d '' src; do
   rel="${src#"$REPO/home/"}"
   dst="$HOME/$rel"
   mkdir -p "$(dirname "$dst")"
-  if [ -L "$dst" ] && [ "$(readlink -f "$dst")" = "$src" ]; then continue; fi
+  if [ "$(readlink -f "$dst")" = "$src" ]; then continue; fi   # já aponta pro repo (link direto ou pasta linkada)
   if [ -e "$dst" ] || [ -L "$dst" ]; then mv "$dst" "$dst.bak-$STAMP"; echo "   backup: ~/$rel.bak-$STAMP"; fi
   ln -s "$src" "$dst"; echo "   ~/$rel"
 done < <(find "$REPO/home" -type f -print0)

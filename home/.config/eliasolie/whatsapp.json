@@ -1,8 +1,0 @@
-{
-  "_ajuda": "Contas de WhatsApp (whatsapp.sh, rodapé do desktop e waybar). id: só letras minúsculas, números e '-' (vira a pasta ~/.local/share/whatsapp/<id> — trocar o id = logar de novo). name: nome no menu. short: rótulo curto no rodapé. Para remover uma conta, apague o bloco dela; depois rode 'whatsapp.sh stop <id>' se ela estiver aberta. Mudanças valem na hora para menu/contador; as regras de janela valem após recarregar o Hyprland.",
-  "accounts": [
-    { "id": "pessoal",      "name": "Pessoal",      "short": "PESSOAL" },
-    { "id": "profissional", "name": "Profissional", "short": "PROF" },
-    { "id": "jac",          "name": "Grupo JAC",    "short": "JAC" }
-  ]
-}

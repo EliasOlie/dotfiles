@@ -81,7 +81,6 @@ hyprctl reload
 | `Super+Shift+O` | abrir projeto (repositórios git em `~/work`) num terminal |
 | `Super+Alt+D` | desktop compacto no monitor atual: esconde atalhos e painéis (etiquetas `+ ⌄` abrem ao passar o mouse); fica salvo |
 | `Super+A` | agenda grande no centro do desktop (monitor atual; fica salvo). Com janelas na frente, vai pro desktop |
-| `Super+Shift+W` | WhatsApp: menu das 3 contas (pessoal, profissional, Grupo JAC) com não lidas; Enter mostra/esconde a conta |
 | `Super+Shift+A` | agenda: novo evento (EliasOlie, ConectaMe ou Pessoal) |
 | `Super+H` | cola de atalhos: lista todos os keybinds e o que fazem (lê do Hyprland, sempre atualizada) |
 | `Super+J` | buscar no Janus (rofi) |
@@ -127,7 +126,6 @@ Os widgets ficam sobre o wallpaper (abaixo das janelas) e **só aparecem quando 
 - **Novo evento pelo desktop** (`quickshell/AgendaForm.qml`): "+ NOVO EVENTO" na agenda do wallpaper, "+ EVENTO" no calendário pequeno (ou `Super+Shift+A` / `qs ipc call desktop newEvent`) abre o mesmo formulário do painel do app de agenda (EliasOlie / ConectaMe / Pessoal, título, data, início, fim, local, descrição, Meet) e envia com `agenda-new` (POST `/api/widget/events` do app, mesmas regras do painel). Ctrl+Enter cria, Esc fecha.
 - **Lembretes da agenda** (`quickshell/AgendaNotify.qml`): notificação 1 h e 10 min antes; dia inteiro às 8h. Cada aviso sai uma vez (`~/.local/state/eliasolie/agenda-notified.json`).
 - **Workspaces vai-e-volta:** `Super+N` no workspace em que você já está volta para o anterior daquele monitor.
-- **WhatsApp (`hypr/scripts/whatsapp.sh`):** contas em `~/.config/eliasolie/whatsapp.json` (id, name, short — remova uma conta apagando o bloco). Cada conta é o WhatsApp Web em modo app do Brave com pasta própria (`~/.local/share/whatsapp/<id>`) e perfil `wa-<id>` (é o perfil que diferencia as janelas: em modo app o Brave ignora `--class`), aberta escondida e sem roubar foco num workspace especial. `Super+Shift+W` abre o menu; Enter mostra/esconde a conta por cima de tudo. Rodapé e waybar mostram as contas abertas (o contador de não lidas depende do título da janela, que a versão atual do WhatsApp Web não preenche).
 - **Carregador:** a bateria mostra `󰚥 TOMADA` / `󰂄 CARREGANDO` em lima (inclusive com 100%), e `power-watch.sh` avisa por notificação quando o carregador é conectado ou desconectado.
 - **Frase do dia:** discreta no canto superior direito (`quickshell/Phrase.qml`); clique troca, 6 cliques rápidos = easter egg.
 
@@ -140,6 +138,29 @@ Os widgets ficam sobre o wallpaper (abaixo das janelas) e **só aparecem quando 
 - **Utilitários rofi** (`hypr/scripts/rofi-tools.sh`): clipboard com miniatura de imagens (`alt d` apaga, `alt shift d` limpa), emoji (precisa `noto-fonts-emoji`) e calculadora (Enter copia).
 - **Tela de bloqueio:** música tocando + linha de status (VPS e backup) via `hypr/scripts/lock-status.sh`.
 - **Boot:** tema Plymouth em `system/plymouth/eliasolie` (logo EO_ + barra lima). Instala com `bash system/install-boot.sh` (pacotes, hook, `quiet splash` no systemd-boot, initramfs e cursor lima no SDDM, tudo com backup).
+
+## Neovim (`home/.config/nvim`)
+
+Mesma identidade do desktop: tema próprio `eliasolie` (void, lima, coral, âmbar), barra de status no estilo da waybar e arquivos abertos no topo como os workspaces. Plugins pelo gerenciador nativo do 0.12 (`vim.pack`, versões em `nvim-pack-lock.json`). A pasta inteira é linkada em `~/.config/nvim`.
+
+- **Language servers (Mason, instalam sozinhos na 1ª abertura):** TypeScript (vtsls), Biome, Tailwind, Go (gopls), Lua, Python (basedpyright), Bash, JSON, CSS, HTML, YAML; QML pelo `qmlls` do Qt. Formatar ao salvar (conform): Biome onde há `biome.json`, senão Prettier; stylua, goimports, ruff, shfmt.
+- **Requisitos:** `tree-sitter` CLI para compilar as linguagens (`npm i -g tree-sitter-cli`), Node (o init acha o do nvm mesmo fora do zsh), `rg`, `fzf`.
+- **Atalhos** (`Espaço` e espere: o menu mostra todos, em português):
+
+| Atalho | Ação |
+|---|---|
+| `Espaço e` / `Espaço E` | árvore de arquivos (à direita) / mostrar o arquivo atual nela |
+| `Ctrl+P` ou `Espaço Espaço` | buscar arquivo |
+| `Espaço /` | buscar texto no projeto |
+| `Ctrl+S` / `Espaço q` | salvar / fechar arquivo |
+| `Tab` / `Shift+Tab` | próximo / anterior arquivo aberto |
+| `Ctrl+h/j/k/l` | mudar de janela (inclui a árvore) |
+| `gd` / `gr` / `K` | definição / quem usa / documentação |
+| `F2` · `Espaço ca` · `Espaço cf` | renomear · ações de código · formatar |
+| `]d` / `[d` · `Espaço xx` | próximo/anterior problema · lista de problemas |
+| `]h` / `[h` · `Espaço gp` · `Espaço gb` | próxima/anterior mudança do git · ver mudança · quem mexeu na linha |
+| `Ctrl+/` · `Alt+j/k` | comentar · mover linha |
+| `Espaço tt` | terminal embaixo |
 
 ## Notas
 
