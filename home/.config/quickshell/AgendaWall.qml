@@ -67,7 +67,7 @@ Item {
             delegate: Text {
                 required property var modelData
                 text: modelData.t
-                color: navMouse.containsMouse || modelData.n === 9 ? Theme.signal : Theme.statik
+                color: navMouse.containsMouse ? Theme.signal : Theme.statik
                 font.family: Theme.mono; font.pixelSize: 12; font.letterSpacing: 2
                 MouseArea {
                     id: navMouse
@@ -75,7 +75,6 @@ Item {
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
-                        if (modelData.n === 9) { wall.newEvent(wall.selectedKey); return }
                         if (modelData.n === 0) {
                             wall.viewYear = AgendaData.today.getFullYear()
                             wall.viewMonth = AgendaData.today.getMonth()
@@ -85,6 +84,19 @@ Item {
                 }
             }
         }
+    }
+
+    // ------------------------------------------------ botão "+ NOVO EVENTO" (no dia clicado, ou hoje)
+    Badge {
+        x: wall.listX
+        anchors.verticalCenter: monthTitle.verticalCenter
+        text: "novo evento"
+        on: true
+        label.text: wall.selectedKey
+            ? "+  NOVO EVENTO EM " + String(wall.selectedKey % 100).padStart(2, "0") + "/" + String(Math.floor(wall.selectedKey / 100) % 100).padStart(2, "0")
+            : "+  NOVO EVENTO"
+        implicitHeight: 34
+        onClicked: wall.newEvent(wall.selectedKey)
     }
 
     // ------------------------------------------------ dias da semana

@@ -11,6 +11,7 @@ Singleton {
     readonly property color bone:     "#EDEDE8"
     readonly property color signal:   "#C8F031"
     readonly property color alert:    "#FF5A4E"
+    readonly property color warn:     "#F2C94C"    // âmbar: "cuidado" (status)
 
     readonly property string mono: "JetBrainsMono Nerd Font"
     readonly property string sans: "Archivo"

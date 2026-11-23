@@ -236,103 +236,13 @@ PanelWindow {
             }
         }
 
-        // =============================================== RODAPÉ-CENTRO: status da VPS
-        // Discreto: "● nome | ● nome" — lima no ar, coral fora. Clique abre o Dokploy.
-        Item {
-            id: footerVps
-            anchors { horizontalCenter: parent.horizontalCenter; bottom: parent.bottom; bottomMargin: desk.edge - 20 }
-            // o conjunto (VPS + WhatsApp) fica centralizado
-            anchors.horizontalCenterOffset: waRow.visible ? -(waRow.width + 12) / 2 : 0
-            width: vpsRow.implicitWidth; height: vpsRow.implicitHeight
+        // =============================================== RODAPÉ-CENTRO: status (VPS + backup)
+        // Recolhido: "■ NORMAL / CUIDADO / ATENÇÃO"; hover abre a lista para cima (StatusPill.qml)
+        StatusPill {
+            anchors { horizontalCenter: parent.horizontalCenter; bottom: parent.bottom; bottomMargin: desk.edge - 26 }
             opacity: desk.stage(5)
             Behavior on opacity { NumberAnimation { duration: 260; easing.type: Easing.OutCubic } }
             transform: Translate { y: desk.intro >= 5 ? 0 : 10; Behavior on y { NumberAnimation { duration: 320; easing.type: Easing.OutCubic } } }
-        Row {
-            id: vpsRow
-            spacing: 12
-            Repeater {
-                model: VpsStatus.services
-                delegate: Row {
-                    required property var modelData
-                    required property int index
-                    spacing: 12
-                    Text {
-                        visible: index > 0
-                        text: "|"
-                        color: Theme.line; font.family: Theme.mono; font.pixelSize: 12
-                    }
-                    Rectangle {
-                        width: 7; height: 7
-                        anchors.verticalCenter: parent.verticalCenter
-                        color: modelData.up ? Theme.signal : Theme.alert
-                    }
-                    Text {
-                        text: modelData.name.toUpperCase()
-                        color: modelData.up ? (vpsMouse.containsMouse ? Theme.bone : Theme.statik) : Theme.alert
-                        font.family: Theme.mono; font.pixelSize: 11; font.letterSpacing: 2
-                    }
-                }
-            }
-            // Backup (restic): "| ■ BACKUP 22H"
-            Text {
-                visible: VpsStatus.services.length > 0
-                text: "|"
-                color: Theme.line; font.family: Theme.mono; font.pixelSize: 12
-            }
-            Rectangle {
-                width: 7; height: 7
-                anchors.verticalCenter: parent.verticalCenter
-                color: BackupStatus.fresh ? Theme.signal : Theme.alert
-            }
-            Text {
-                text: "BACKUP " + BackupStatus.age.toUpperCase()
-                color: BackupStatus.fresh ? Theme.statik : Theme.alert
-                font.family: Theme.mono; font.pixelSize: 11; font.letterSpacing: 2
-            }
-        }
-            MouseArea {
-                id: vpsMouse
-                anchors.fill: parent
-                hoverEnabled: true
-                cursorShape: Qt.PointingHandCursor
-                onClicked: if (VpsStatus.panel) Quickshell.execDetached(["brave", VpsStatus.panel])
-            }
-        }
-        // WhatsApp no rodapé: "| ■ PESSOAL 3 | ■ PROF | ■ JAC 12" (lima = não lidas; clique abre a conta)
-        Row {
-            id: waRow
-            anchors { left: footerVps.right; leftMargin: 12; verticalCenter: footerVps.verticalCenter }
-            spacing: 12
-            visible: WhatsApp.anyOpen
-            opacity: footerVps.opacity
-            Repeater {
-                model: WhatsApp.open
-                delegate: Row {
-                    id: wa
-                    required property var modelData
-                    readonly property int n: modelData.n
-                    spacing: 12
-                    Text { text: "|"; color: Theme.line; font.family: Theme.mono; font.pixelSize: 12 }
-                    Rectangle {
-                        width: 7; height: 7
-                        anchors.verticalCenter: parent.verticalCenter
-                        color: wa.n > 0 ? Theme.signal : Theme.statik
-                    }
-                    Text {
-                        text: (wa.modelData.short || wa.modelData.name.toUpperCase()) + (wa.n > 0 ? " " + wa.n : "")
-                        color: wa.n > 0 ? Theme.signal : (waMouse.containsMouse ? Theme.bone : Theme.statik)
-                        font.family: Theme.mono; font.pixelSize: 11; font.letterSpacing: 2
-                        font.weight: wa.n > 0 ? Font.Bold : Font.Normal
-                        MouseArea {
-                            id: waMouse
-                            anchors { fill: parent; margins: -6; leftMargin: -24 }
-                            hoverEnabled: true
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: WhatsApp.toggle(wa.modelData.id)
-                        }
-                    }
-                }
-            }
         }
 
         // =============================================== CENTRO: agenda do wallpaper (Super+A, por monitor)
@@ -370,6 +280,7 @@ PanelWindow {
             // ---------- AGENDA (calendário + próximos eventos; ver AgendaCard.qml)
             AgendaCard {
                 visible: !desk.bigAgenda             // com a agenda grande aberta, a pequena sai
+                onNewEvent: key => newEventForm.openFor(key)
                 Layout.fillWidth: true
                 Layout.preferredHeight: implicitHeight
             }

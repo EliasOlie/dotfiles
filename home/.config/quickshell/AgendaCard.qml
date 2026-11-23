@@ -116,6 +116,14 @@ Card {
         onTriggered: { agenda.today = new Date(); agendaFile.reload() }
     }
 
+    // "+ EVENTO" no canto do card: abre o formulário (no dia clicado, ou hoje)
+    signal newEvent(int key)
+    Badge {
+        anchors { right: parent.right; top: parent.top; margins: 18 }
+        text: "+ evento"
+        onClicked: agenda.newEvent(agenda.selectedKey)
+    }
+
     // ---------------------------------------------------------------- visual
     Column {
         id: col
