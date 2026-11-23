@@ -57,3 +57,5 @@ tesseract
 tesseract-data-por
 tesseract-data-eng
 wf-recorder
+mpv
+mpv-mpris

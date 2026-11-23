@@ -78,7 +78,7 @@ hyprctl reload
 | `Super+Ctrl+F9..F12` | mover workspace para o monitor da esquerda/direita/cima/baixo |
 | `Super+Alt+V` / `E` / `C` | clipboard / emoji / calculadora |
 | `Super+S` / `Super+Ctrl+S` | busca na web / alternar janelas |
-| `Super+Shift+O` | abrir projeto (repositórios git em `~/work`): Enter terminal · `Alt+C` com o Claude · `Alt+N` no Neovim |
+| `Super+Shift+O` | abrir projeto (repositórios git em `~/work`): Enter terminal · `Alt+A` agyh (sessões do projeto ou nova sessão Claude/agy) · `Alt+N` no Neovim |
 | `Super+Alt+D` | desktop compacto no monitor atual: esconde atalhos e painéis (etiquetas `+ ⌄` abrem ao passar o mouse); fica salvo |
 | `Super+A` | agenda grande no centro do desktop (monitor atual; fica salvo). Com janelas na frente, vai pro desktop |
 | `Super+Shift+A` | agenda: novo evento (EliasOlie, ConectaMe ou Pessoal) |
@@ -88,6 +88,7 @@ hyprctl reload
 | `Super+Shift+T` | copiar texto de uma área da tela (OCR local, pt+en) |
 | `Super+Shift+R` | gravar tela: área (ou Esc = monitor inteiro); de novo para parar · `~/Vídeos/gravacoes` |
 | `Super+Ctrl+P` | fixar janela por cima de tudo (em todos os workspaces) |
+| `Super+Y` | agyh: sessões recentes de todos os agentes (digitar filtra; Enter sem resultado = busca no histórico) · Enter retoma · `Alt+V` mostra a conversa |
 | `Super+H` | cola de atalhos: lista todos os keybinds e o que fazem (lê do Hyprland, sempre atualizada) |
 | `Super+J` | buscar no Janus (rofi) |
 | `Super+Alt+F` | modo foco: 25 min com "não perturbe" (de novo encerra) |
@@ -130,6 +131,7 @@ Os widgets ficam sobre o wallpaper (abaixo das janelas) e **só aparecem quando 
 - **Visão geral** (`quickshell/Overview.qml`, `Super+O` no monitor em foco, `Super+Ctrl+O` em todos): cada workspace com janelas vira uma miniatura do monitor com a imagem real das janelas na posição delas; se há janela maximizada/tela cheia (que esconde as outras), as janelas são espalhadas lado a lado. Workspaces especiais (ex.: terminal suspenso) aparecem como "ESCONDIDAS". Clique na janela vai pra ela, no workspace vai pra ele, Esc fecha. As imagens são capturadas uma vez ao abrir (sem custo contínuo).
 - **Picture-in-picture do Brave:** abre pequeno (480×270), fixo por cima de tudo, no canto inferior direito (regra em `look.lua`).
 - **Gravação de tela:** `● REC 01:23` em coral na waybar enquanto grava (`rec.sh`, H.264 pela GPU Intel quando dá).
+- **Vídeo (mpv, `home/.config/mpv`):** janela limpa sem interface, fundo void, OSD em JetBrains Mono, GPU Intel; lembra a posição ao sair (`q`). Dentro do terminal: `mpvt arquivo|url`. Com `mpv-mpris` aparece no card de mídia e nas teclas de mídia.
 - **Modo descanso** (`quickshell/Idle.qml`, 2 min sem mexer em nada, respeita vídeo em tela cheia): os pontos da grade formam a hora em matriz no centro, estrelas acendem e apagam pela grade e os widgets quase somem. Mexeu, volta.
 - **Wallpaper que reage:** clique no fundo do desktop solta uma onda pelos pontos; com música tocando (MPRIS) e o desktop à mostra, os pontos pulsam em lima no ritmo dos graves (`hypr/scripts/audio-level.py`, via `parec`, sem cava).
 - **Indicador de volume/brilho/microfone:** card no estilo do site que sobe do rodapé, só no monitor com foco (`quickshell/Osd.qml`; `qs ipc call osd popup volume 45 false`). O `osd.sh` cai numa notificação se o Quickshell não estiver rodando.

@@ -287,6 +287,7 @@ end
 bind(mainMod .. " + CTRL + P", PinToggle, "fixar janela por cima de tudo (liga/desliga)")
 
 bind(mainMod .. " + H",         sh(scripts .. "/keybinds.py"),    "mostrar todos os atalhos")
+bind(mainMod .. " + Y",         sh(scripts .. "/agyh-menu.py"),   "agyh: buscar sessões (Claude, agy…)")
 bind(mainMod .. " + J",         sh(scripts .. "/janus.py"),       "buscar no Janus")
 bind(mainMod .. " + ALT + F",   sh(scripts .. "/focus.sh toggle"), "modo foco (25 min, não perturbe)")
 

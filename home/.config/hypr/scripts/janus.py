@@ -85,8 +85,12 @@ def row(dom, title, tag=""):
 def show(title, body):
     f = tempfile.NamedTemporaryFile("w", suffix=".md", prefix="janus-", delete=False)
     f.write(f"# {title}\n\n{body}\n"); f.close()
-    subprocess.Popen(["kitty", "--class", "janus-view", "--title", "Janus",
-                      "sh", "-c", f'bat -l md --style=plain --paging=always "{f.name}"; rm -f "{f.name}"'])
+    # Leitor: Neovim só leitura com o tema eliasolie (markdown colorido); q ou Esc fecham.
+    # (bat+less fechava na hora: o less não vem instalado e o bat saía sem paginar)
+    subprocess.Popen(["kitty", "--class", "janus-view", "--title", "Janus", "nvim", "-R",
+                      "-c", "setlocal nomodifiable nonumber norelativenumber wrap linebreak signcolumn=no conceallevel=2",
+                      "-c", "nnoremap <buffer> q <Cmd>qa!<CR>", "-c", "nnoremap <buffer> <Esc> <Cmd>qa!<CR>",
+                      "-c", f"autocmd VimLeave * call delete('{f.name}')", f.name])
 
 
 def one_line(t, n=120): return " ".join((t or "").split())[:n]

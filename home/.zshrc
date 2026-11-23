@@ -125,6 +125,9 @@ eval "$(zoxide init zsh)"
 alias ls='eza --icons --group-directories-first'
 alias ll='eza -la --icons --group-directories-first'
 alias lt='eza --tree --icons -L 2'
+
+# Vídeo dentro do terminal (kitty): mpvt arquivo.mp4 | mpvt https://youtu.be/…
+mpvt() { mpv --vo=kitty --vo-kitty-use-shm=yes --really-quiet "$@"; }
 alias cat='bat --paging=never'
 alias gs='git status -sb'
 alias gd='git diff'
