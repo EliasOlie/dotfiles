@@ -286,6 +286,18 @@ function PinToggle()
 end
 bind(mainMod .. " + CTRL + P", PinToggle, "fixar janela por cima de tudo (liga/desliga)")
 
+-- Lupa de tela (zoom em volta do cursor, acompanha o mouse): 1x a 6x
+ZOOM = ZOOM or 1.0
+function ZoomBy(step)
+    ZOOM = math.max(1.0, math.min(6.0, ZOOM + step))
+    if ZOOM < 1.05 then ZOOM = 1.0 end
+    hl.config({ cursor = { zoom_factor = ZOOM } })
+end
+bind(mainMod .. " + equal", function() ZoomBy(0.5) end,  "zoom: aproximar")
+bind(mainMod .. " + minus", function() ZoomBy(-0.5) end, "zoom: afastar (até o normal)")
+bind(mainMod .. " + CTRL + mouse_up",   function() ZoomBy(0.25) end,  "zoom: aproximar (roda)")
+bind(mainMod .. " + CTRL + mouse_down", function() ZoomBy(-0.25) end, "zoom: afastar (roda)")
+
 bind(mainMod .. " + H",         sh(scripts .. "/keybinds.py"),    "mostrar todos os atalhos")
 bind(mainMod .. " + Y",         sh(scripts .. "/agyh-menu.py"),   "agyh: buscar sessões (Claude, agy…)")
 bind(mainMod .. " + J",         sh(scripts .. "/janus.py"),       "buscar no Janus")

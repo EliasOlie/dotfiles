@@ -89,6 +89,7 @@ hyprctl reload
 | `Super+Shift+R` | gravar tela: escolhe o som (sem · computador · microfone · os dois), depois a área (Esc = monitor inteiro); de novo para parar · `~/Vídeos/gravacoes` |
 | `Super+Ctrl+P` | fixar janela por cima de tudo (em todos os workspaces) |
 | `Super+Y` | agyh: sessões recentes de todos os agentes (digitar filtra; Enter sem resultado = busca no histórico) · Enter retoma · `Alt+V` mostra a conversa |
+| `Super+=` / `Super+−` · `Super+Ctrl+roda` | lupa de tela: aproxima/afasta em volta do cursor (1x a 6x; afastar até o fim volta ao normal) |
 | `Super+H` | cola de atalhos: lista todos os keybinds e o que fazem (lê do Hyprland, sempre atualizada) |
 | `Super+J` | buscar no Janus (rofi) |
 | `Super+Alt+F` | modo foco: 25 min com "não perturbe" (de novo encerra) |
