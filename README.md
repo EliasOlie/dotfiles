@@ -137,6 +137,7 @@ Os widgets ficam sobre o wallpaper (abaixo das janelas) e **só aparecem quando 
 - **Janus no rofi (`Super+J`):** `hypr/scripts/janus.py` fala com o Janus pelo MCP (stdio). Lista os artigos (o rofi filtra), Enter em texto livre busca no Janus (inclui decisões), e o item abre num kitty flutuante. Caminho: `$JANUS_MCP` (padrão `~/work/janus/scripts/mcp.sh`).
 - **Utilitários rofi** (`hypr/scripts/rofi-tools.sh`): clipboard com miniatura de imagens (`alt d` apaga, `alt shift d` limpa), emoji (precisa `noto-fonts-emoji`) e calculadora (Enter copia).
 - **Tela de bloqueio:** música tocando + linha de status (VPS e backup) via `hypr/scripts/lock-status.sh`.
+- **Boot rápido e login sem Xorg** (`bash system/boot-tweaks.sh`, pede a senha de administrador): systemd-boot com `timeout 0` (segure Espaço ao ligar para ver o menu) e SDDM em Wayland sobre o weston (`system/sddm.conf.d/20-wayland.conf`, teclado ABNT2 e cursor em `system/sddm-wayland/sddm-weston.ini`). Desfazer o login Wayland: `bash system/boot-tweaks.sh --undo-sddm` (de um TTY, se a tela de login não abrir).
 - **Boot:** tema Plymouth em `system/plymouth/eliasolie` (logo EO_ + barra lima). Instala com `bash system/install-boot.sh` (pacotes, hook, `quiet splash` no systemd-boot, initramfs e cursor lima no SDDM, tudo com backup).
 
 ## Neovim (`home/.config/nvim`)
