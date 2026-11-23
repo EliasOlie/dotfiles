@@ -27,6 +27,7 @@ Item {
     property int viewMonth: AgendaData.today.getMonth()
     property int selectedKey: 0
     signal newEvent(int key)          // "+ NOVO EVENTO": abre o formulário no dia escolhido
+    signal openEvent(var ev)          // clique num evento: detalhes (editar, excluir…)
     readonly property var listed: selectedKey ? AgendaData.onDay(selectedKey, 6) : AgendaData.upcoming(6)
 
     readonly property var cells: {
@@ -220,7 +221,7 @@ Item {
             Rectangle { x: 0; y: 16; width: 7; height: 7; color: ev.tint }
             Text {
                 x: 20; y: 12
-                text: AgendaData.timeLabel(ev.modelData) + (ev.link ? "   ·   MEET ↗" : "")
+                text: AgendaData.timeLabel(ev.modelData) + (ev.link ? "   ·   MEET" : "")
                 color: ev.tint
                 font.family: Theme.mono; font.pixelSize: 11; font.letterSpacing: 1.5
             }
@@ -229,7 +230,7 @@ Item {
                 width: parent.width - 20
                 elide: Text.ElideRight
                 text: ev.modelData.title
-                color: evMouse.containsMouse && ev.link ? Theme.signal : Theme.bone
+                color: evMouse.containsMouse ? Theme.signal : Theme.bone
                 font.family: Theme.sans; font.pixelSize: 22; font.weight: Font.Bold
                 font.variableAxes: { "wdth": 85 }
             }
@@ -237,9 +238,8 @@ Item {
                 id: evMouse
                 anchors.fill: parent
                 hoverEnabled: true
-                enabled: ev.link !== ""
-                cursorShape: ev.link ? Qt.PointingHandCursor : Qt.ArrowCursor
-                onClicked: Qt.openUrlExternally(ev.link)
+                cursorShape: Qt.PointingHandCursor
+                onClicked: wall.openEvent(ev.modelData)        // detalhes; o Meet fica lá dentro
             }
         }
     }

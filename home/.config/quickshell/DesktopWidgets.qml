@@ -253,6 +253,7 @@ PanelWindow {
         AgendaWall {
             anchors.fill: parent
             onNewEvent: key => newEventForm.openFor(key)
+            onOpenEvent: e => newEventForm.openEvent(e)
             opacity: desk.bigAgenda ? desk.stage(3) : 0
             visible: opacity > 0.01
             Behavior on opacity { NumberAnimation { duration: 260; easing.type: Easing.OutCubic } }
@@ -285,6 +286,7 @@ PanelWindow {
             AgendaCard {
                 visible: !desk.bigAgenda             // com a agenda grande aberta, a pequena sai
                 onNewEvent: key => newEventForm.openFor(key)
+                onOpenEvent: e => newEventForm.openEvent(e)
                 Layout.fillWidth: true
                 Layout.preferredHeight: implicitHeight
             }

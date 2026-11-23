@@ -118,6 +118,7 @@ Card {
 
     // "+ NOVO" na linha do mês: abre o formulário (no dia clicado, ou hoje)
     signal newEvent(int key)
+    signal openEvent(var ev)          // clique num evento: detalhes (editar, excluir…)
     // na linha do mês, encostado à direita (mês à esquerda · NOVO à direita)
     // (parent: o card em si — filhos comuns caem na área de conteúdo, abaixo do cabeçalho)
     Badge {
@@ -285,7 +286,7 @@ Card {
                 height: 50
                 color: Theme.void_
                 border.width: 1
-                border.color: evHover.hovered && link ? agenda.colorOf(modelData.brand) : Theme.line
+                border.color: evHover.hovered ? agenda.colorOf(modelData.brand) : Theme.line
 
                 Rectangle {
                     width: 3
@@ -321,8 +322,8 @@ Card {
                         font.family: Theme.sans; font.pixelSize: 13; font.weight: Font.DemiBold
                     }
                 }
-                HoverHandler { id: evHover; cursorShape: ev.link ? Qt.PointingHandCursor : Qt.ArrowCursor }
-                TapHandler { enabled: ev.link !== ""; onTapped: Qt.openUrlExternally(ev.link) }
+                HoverHandler { id: evHover; cursorShape: Qt.PointingHandCursor }
+                TapHandler { onTapped: agenda.openEvent(ev.modelData) }   // detalhes; o Meet fica lá dentro
             }
         }
 
