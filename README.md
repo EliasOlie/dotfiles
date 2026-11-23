@@ -86,7 +86,7 @@ hyprctl reload
 | `Super+Shift+J` | Janus: registrar decisão/nota (texto → grupo) |
 | `Super+Shift+C` | conta-gotas: copia a cor de qualquer pixel em #hex |
 | `Super+Shift+T` | copiar texto de uma área da tela (OCR local, pt+en) |
-| `Super+Shift+R` | gravar tela: área (ou Esc = monitor inteiro); de novo para parar · `~/Vídeos/gravacoes` |
+| `Super+Shift+R` | gravar tela: escolhe o som (sem · computador · microfone · os dois), depois a área (Esc = monitor inteiro); de novo para parar · `~/Vídeos/gravacoes` |
 | `Super+Ctrl+P` | fixar janela por cima de tudo (em todos os workspaces) |
 | `Super+Y` | agyh: sessões recentes de todos os agentes (digitar filtra; Enter sem resultado = busca no histórico) · Enter retoma · `Alt+V` mostra a conversa |
 | `Super+H` | cola de atalhos: lista todos os keybinds e o que fazem (lê do Hyprland, sempre atualizada) |
