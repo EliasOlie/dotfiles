@@ -304,8 +304,7 @@ bind(mainMod .. " + J",         sh(scripts .. "/janus.py"),       "buscar no Jan
 bind(mainMod .. " + ALT + F",   sh(scripts .. "/focus.sh toggle"), "modo foco (25 min, não perturbe)")
 
 -- Bitwarden (Vaultwarden auto-hospedado) via rbw + rofi-rbw
-bind(mainMod .. " + SHIFT + P", sh(scripts .. "/bitwarden.sh"),      "bitwarden: digitar login/senha")
-bind(mainMod .. " + ALT + P",   sh(scripts .. "/bitwarden.sh totp"), "bitwarden: copiar código TOTP")
+bind(mainMod .. " + SHIFT + P", sh(scripts .. "/bitwarden.sh"),      "bitwarden: credenciais e notas (alt t no menu = TOTP)")
 
 -- ------------------------------------------------------------
 -- Game mode (Super+Shift+G): sem animações, blur, sombras e gaps

@@ -8,7 +8,7 @@
       Alt+V   ver: abre um 2º modal com todos os campos (usuário, senha, TOTP,
               URLs, campos personalizados, nota) — setas navegam, Enter copia o
               selecionado e fecha tudo, Esc volta para a lista
-  bitwarden.py totp     escolhe um item e copia o TOTP (Super+Alt+P)
+  bitwarden.py totp     escolhe um item e copia o TOTP (sem atalho; no menu use Alt+T)
 
 Segurança: cópias com wl-copy --sensitive (o cliphist não guarda) e apagadas em
 20 s se ainda estiverem na área de transferência; segredos nunca vão para a

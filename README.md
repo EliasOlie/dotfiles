@@ -94,7 +94,6 @@ hyprctl reload
 | `Super+J` | buscar no Janus (rofi) |
 | `Super+Alt+F` | modo foco: 25 min com "não perturbe" (de novo encerra) |
 | `Super+Shift+P` | Bitwarden: credenciais e notas. Enter digita login (credencial) ou copia a nota · `alt u`/`alt p`/`alt t` copiam usuário/senha/TOTP · `alt v` abre os campos (setas navegam, Enter copia e fecha, Esc volta). Cópias somem em 20 s e não entram no histórico |
-| `Super+Alt+P` | Bitwarden: copia TOTP |
 | `Super+Shift+G` | game mode (sem animações, blur, sombras e gaps) |
 | `Super+N` | luz noturna: liga/desliga (ela já é automática por horário) |
 | `Super+Shift+N` | notificações |
