@@ -1,0 +1,9 @@
+[Unit]
+Description=Vigia ~/AppImages e atualiza o lançador quando a pasta muda
+
+[Path]
+PathChanged=%h/AppImages
+MakeDirectory=yes
+
+[Install]
+WantedBy=default.target

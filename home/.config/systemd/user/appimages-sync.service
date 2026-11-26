@@ -1,0 +1,6 @@
+[Unit]
+Description=Atalhos do lançador para os AppImages de ~/AppImages
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/appimages-sync

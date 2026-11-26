@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+# AppImages no lançador (Super+Espaço): para cada ~/AppImages/*.AppImage cria um
+# atalho .desktop com o nome e o ícone de dentro do próprio AppImage
+# (~/.local/share/applications/appimage-*.desktop) e remove os de AppImages que
+# saíram da pasta. Roda sozinho quando a pasta muda (appimages-sync.path).
+#   appimages-sync          sincroniza
+#   appimages-sync run X    abre o AppImage X (usa FUSE se houver; senão extrai e roda)
+set -uo pipefail
+DIR="${APPIMAGES_DIR:-$HOME/AppImages}"
+APPS="${XDG_DATA_HOME:-$HOME/.local/share}/applications"
+ICONS="${XDG_DATA_HOME:-$HOME/.local/share}/icons/appimages"
+
+if [[ ${1:-} == run ]]; then
+    shift; app=$1; shift
+    # AppImage tipo 2 precisa do libfuse2; sem ele, extrai para um temporário e roda
+    if ! ldconfig -p 2>/dev/null | grep -q 'libfuse.so.2'; then export APPIMAGE_EXTRACT_AND_RUN=1; fi
+    exec "$app" "$@"
+fi
+
+mkdir -p "$APPS" "$ICONS"
+slug() { basename "$1" | sed -E 's/\.[Aa]pp[Ii]mage$//; s/[^A-Za-z0-9]+/-/g; s/^-+|-+$//g' | tr '[:upper:]' '[:lower:]'; }
+keep=()
+shopt -s nullglob nocaseglob
+for img in "$DIR"/*.appimage; do
+    [[ -f $img ]] || continue
+    [[ -x $img ]] || chmod +x "$img"      # só se precisar (chmod à toa redispararia o vigia)
+    s=$(slug "$img"); keep+=("appimage-$s.desktop")
+    out="$APPS/appimage-$s.desktop"
+    [[ -f $out && $out -nt $img ]] && continue          # já está em dia
+
+    # tira o .desktop e o ícone de dentro do AppImage (não precisa de FUSE)
+    tmp=$(mktemp -d); name=""; cats=""; comment=""; icon=""
+    ( cd "$tmp" && "$img" --appimage-extract '*.desktop' >/dev/null 2>&1 && "$img" --appimage-extract .DirIcon >/dev/null 2>&1 )
+    d=$(find "$tmp/squashfs-root" -maxdepth 1 -name '*.desktop' 2>/dev/null | head -1)
+    if [[ -n $d ]]; then
+        name=$(grep -m1 '^Name=' "$d" | cut -d= -f2-)
+        comment=$(grep -m1 '^Comment=' "$d" | cut -d= -f2-)
+        cats=$(grep -m1 '^Categories=' "$d" | cut -d= -f2-)
+        iname=$(grep -m1 '^Icon=' "$d" | cut -d= -f2-)
+        [[ -n $iname ]] && ( cd "$tmp" && "$img" --appimage-extract "$iname.png" >/dev/null 2>&1; "$img" --appimage-extract "$iname.svg" >/dev/null 2>&1 )
+    fi
+    # .DirIcon costuma ser um link para o ícone de verdade lá dentro: extrai o alvo também
+    tgt=$(readlink "$tmp/squashfs-root/.DirIcon" 2>/dev/null)
+    [[ -n $tgt ]] && ( cd "$tmp" && "$img" --appimage-extract "$tgt" >/dev/null 2>&1 )
+    src=$(readlink -f "$tmp/squashfs-root/.DirIcon" 2>/dev/null)
+    [[ -f ${src:-} ]] || src=$(find "$tmp/squashfs-root" -maxdepth 1 \( -name '*.png' -o -name '*.svg' \) 2>/dev/null | head -1)
+    if [[ -f ${src:-} ]]; then
+        ext=${src##*.}; [[ $ext == svg ]] || ext=png
+        cp -f "$src" "$ICONS/$s.$ext"; icon="$ICONS/$s.$ext"
+    fi
+    rm -rf "$tmp"
+
+    cat > "$out" <<EOF
+[Desktop Entry]
+Type=Application
+Name=${name:-$(basename "$img" | sed -E 's/\.[Aa]pp[Ii]mage$//')}
+Comment=${comment:-AppImage}
+Exec=$HOME/.local/bin/appimages-sync run "$img" %U
+Icon=${icon:-application-x-executable}
+Categories=${cats:-Utility;}
+Terminal=false
+X-AppImage-Path=$img
+EOF
+    echo "atalho: $(basename "$out") ← $(basename "$img")"
+done
+
+# remove atalhos de AppImages que não estão mais na pasta
+for f in "$APPS"/appimage-*.desktop; do
+    b=$(basename "$f")
+    [[ " ${keep[*]} " == *" $b "* ]] && continue
+    rm -f "$f" "$ICONS/$(basename "$b" .desktop | sed 's/^appimage-//')".{png,svg}
+    echo "removido: $b"
+done
+command -v update-desktop-database >/dev/null && update-desktop-database "$APPS" 2>/dev/null
+exit 0

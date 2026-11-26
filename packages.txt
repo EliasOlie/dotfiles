@@ -59,3 +59,4 @@ tesseract-data-eng
 wf-recorder
 mpv
 mpv-mpris
+fuse2
