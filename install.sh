@@ -58,6 +58,9 @@ while IFS= read -r -d '' src; do
   ln -s "$src" "$dst"; echo "   ~/$rel"
 done < <(find "$REPO/home" -type f -print0)
 chmod +x "$REPO"/home/.config/hypr/scripts/*.sh
+chmod +x "$REPO"/home/.local/bin/* 2>/dev/null || true
+# AppImages de ~/AppImages no lançador (vigia a pasta)
+systemctl --user daemon-reload && systemctl --user enable --now appimages-sync.path >/dev/null 2>&1 || true
 
 echo "==> Fonte Archivo (Google Fonts, OFL)"
 F="$HOME/.local/share/fonts/Archivo"
