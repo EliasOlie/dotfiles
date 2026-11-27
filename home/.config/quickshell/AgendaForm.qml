@@ -176,7 +176,7 @@ PanelWindow {
     Rectangle {
         id: card
         anchors.centerIn: parent
-        width: 620
+        width: form.mode === "view" ? 700 : 620
         height: (form.mode === "view" ? viewBody.implicitHeight : body.implicitHeight) + 56
         Behavior on height { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } }
         clip: true
@@ -245,12 +245,11 @@ PanelWindow {
                 spacing: 6
                 visible: !!form.ev && !!form.ev.description
                 Text { text: "DESCRIÇÃO"; color: Theme.statik; font.family: Theme.mono; font.pixelSize: 10; font.letterSpacing: 3 }
-                Text {
-                    width: parent.width; wrapMode: Text.WordWrap
-                    maximumLineCount: 8; elide: Text.ElideRight
+                // blocos <tag>…</tag> viram botões (copiar · WhatsApp · Telegram); rola se for longa
+                DescView {
+                    width: parent.width
+                    maxHeight: 340
                     text: form.ev ? form.ev.description || "" : ""
-                    color: Theme.bone; font.family: Theme.sans; font.pixelSize: 14
-                    textFormat: Text.PlainText
                 }
             }
             Text {
@@ -354,7 +353,57 @@ PanelWindow {
                 Field { id: end;   width: 100; label: "FIM";    hint: "10:00"; maxLen: 5 }
             }
             Field { id: where; width: parent.width; label: "LOCAL"; hint: "opcional"; maxLen: 300 }
-            Field { id: desc;  width: parent.width; label: "DESCRIÇÃO"; hint: "opcional"; maxLen: 4000 }
+            // Descrição: várias linhas, com rolagem (Enter quebra linha; Ctrl+Enter salva).
+            // Dica: <legenda>texto</legenda> vira um botão de copiar na tela do evento.
+            Column {
+                id: desc
+                width: parent.width
+                spacing: 7
+                property alias input: area
+                Text { text: "DESCRIÇÃO"; color: Theme.statik; font.family: Theme.mono; font.pixelSize: 10; font.letterSpacing: 3 }
+                Rectangle {
+                    width: parent.width; height: 150
+                    color: Theme.void_
+                    border.width: area.activeFocus ? 2 : 1
+                    border.color: area.activeFocus ? Theme.signal : Theme.line
+                    Flickable {
+                        id: areaFlick
+                        anchors { fill: parent; margins: 10 }
+                        contentHeight: area.contentHeight
+                        clip: true
+                        boundsBehavior: Flickable.StopAtBounds
+                        function ensureVisible(r) {
+                            if (contentY >= r.y) contentY = r.y
+                            else if (contentY + height <= r.y + r.height) contentY = r.y + r.height - height
+                        }
+                        TextEdit {
+                            id: area
+                            width: areaFlick.width
+                            wrapMode: TextEdit.Wrap
+                            color: Theme.bone
+                            selectionColor: Theme.signal; selectedTextColor: Theme.void_
+                            font.family: Theme.sans; font.pixelSize: 15
+                            onCursorRectangleChanged: areaFlick.ensureVisible(cursorRectangle)
+                            Keys.onEscapePressed: form.close()
+                            Keys.onReturnPressed: (ev) => { if (ev.modifiers & Qt.ControlModifier) form.submit(); else ev.accepted = false }
+                            Keys.onEnterPressed: (ev) => { if (ev.modifiers & Qt.ControlModifier) form.submit(); else ev.accepted = false }
+                        }
+                        Text {
+                            visible: !area.text && !area.activeFocus
+                            text: "opcional  ·  <legenda>texto</legenda> vira botão de copiar"
+                            color: Qt.alpha(Theme.statik, 0.5); font.family: Theme.sans; font.pixelSize: 14
+                        }
+                    }
+                    Rectangle {
+                        visible: areaFlick.contentHeight > areaFlick.height
+                        anchors.right: parent.right; anchors.rightMargin: 3
+                        width: 2
+                        y: 10 + areaFlick.visibleArea.yPosition * (parent.height - 20)
+                        height: areaFlick.visibleArea.heightRatio * (parent.height - 20)
+                        color: Theme.signal
+                    }
+                }
+            }
 
             // Meet + ações
             Item {
